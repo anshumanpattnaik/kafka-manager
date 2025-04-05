@@ -50,7 +50,11 @@ class KafkaProducerClient:
             self._producer = None
             return False
 
-    def send_message(self, topic: str, value: dict):
+    def send_message(
+        self,
+        topic: str,
+        value: dict = None
+    ):
         """
         This method sends the serialized JSON value to the Kafka topic with the given topic name using the configured
         Kafka producer.
@@ -64,12 +68,19 @@ class KafkaProducerClient:
             print('Kafka producer is not running!')
             return None
 
+        if value is None:
+            print('At least one value must be specified!')
+            return None
+
         try:
             response = self._producer.send(topic, value)
             return response
         except KafkaError as e:
             print(f'Error in sending the message: {e}')
             return None
+
+    def flush(self):
+        self._producer.flush()
 
     def stop(self):
         """
