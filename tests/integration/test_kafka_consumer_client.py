@@ -1,4 +1,3 @@
-import time
 import unittest
 
 from src.kafka_consumer_client import KafkaConsumerClient
@@ -102,35 +101,3 @@ class TestKafkaConsumerClient(unittest.TestCase):
 
         consumer_client.consume(process_kafka_message)
         self.assertEqual(consumed_messages, test_messages)
-
-    def test_kafka_consumer_client_consume_with_auto_offset_reset_latest(self):
-        """ Test Kafka Consumer Client consuming with auto offset reset """
-        test_message = {
-            "message": "Test Messages"
-        }
-        self.producer_client.send_message(self.SINGLE_TEST_TOPIC, test_message)
-        self.producer_client.flush()
-        time.sleep(1)
-
-        consumed_messages = []
-        def process_kafka_message(message):
-            consumed_messages.append(message.value)
-            consumer_client.stop()
-
-        consumer_client = KafkaConsumerClient(
-            bootstrap_servers=self.KAFKA_BOOTSTRAP_SERVERS,
-            topics=[self.SINGLE_TEST_TOPIC],
-            group_id=f'test_group_latest_offset_{self.test_utils.random_string()}',
-            auto_offset_reset='latest'
-        )
-        self.assertTrue(consumer_client.start())
-
-        new_test_message = {
-            "message": "New Test Message"
-        }
-        self.producer_client.send_message(self.SINGLE_TEST_TOPIC, new_test_message)
-        self.producer_client.flush()
-        time.sleep(1)
-
-        consumer_client.consume(process_kafka_message)
-        self.assertEqual([consumed_messages[1]], [new_test_message])

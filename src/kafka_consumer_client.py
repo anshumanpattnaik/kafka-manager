@@ -1,4 +1,5 @@
 import json
+import time
 
 from kafka.consumer import KafkaConsumer
 from kafka.errors import KafkaError
@@ -96,14 +97,18 @@ class KafkaConsumerClient:
             self._consumer.subscribe(self._topics)
             while self._running:
                 records = self._consumer.poll(timeout_ms=1000)
-                for topic_partition, consumer_list in records.items():
-                    for message in consumer_list:
-                        message_handler(message)
-                        print(f'Received message: Partition={message.partition}, '
-                              f'Offset={message.offset}, Key={message.key}, '
-                              f'Value={message.value}')
-                    if not self._running:
-                        return
+                if records:
+                    for topic_partition, consumer_list in records.items():
+                        for message in consumer_list:
+                            message_handler(message)
+                            print(f'Received message: Partition={message.partition}, '
+                                  f'Offset={message.offset}, Key={message.key}, '
+                                  f'Value={message.value}')
+                        if not self._running:
+                            return
+                time.sleep(0.01)
+                return
+            print(f'Kafka consumer group {self._group_id} stopped.')
         except KafkaError as e:
             print(f"Error during Kafka consumption: {e}")
         finally:

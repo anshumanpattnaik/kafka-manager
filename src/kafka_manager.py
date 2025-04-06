@@ -1,5 +1,3 @@
-import json
-
 from kafka.admin import NewTopic, KafkaAdminClient
 from kafka.errors import KafkaError
 
@@ -72,7 +70,7 @@ class KafkaManager:
 
     def create_consumer(
         self,
-        topics: str = None,
+        topics: list = None,
         group_id: str = None,
         auto_offset_reset: str = 'latest',
         **kwargs
@@ -94,8 +92,7 @@ class KafkaManager:
         """
         try:
             consumer_client = KafkaConsumerClient(bootstrap_servers=self._bootstrap_servers, topics=topics,
-                                                  group_id=group_id, auto_offset_reset=auto_offset_reset,
-                                                  value_deserializer=lambda v: json.loads(v.decode('utf-8')), **kwargs)
+                                                  group_id=group_id, auto_offset_reset=auto_offset_reset, **kwargs)
             self._consumers[group_id if group_id else f"default_consumer_{len(self._consumers)}"] = consumer_client
             return consumer_client
         except KafkaError as e:
@@ -212,8 +209,8 @@ class KafkaManager:
         topic_name
     ):
         """
-        This method deletes a topic with the given `topic_name` and it's an administrative operation, it can only be deleted
-        by the admin client.
+        This method deletes a topic with the given `topic_name` and it's an administrative operation, it can only be
+        deleted by the admin client.
 
         :param topic_name: Name of the new topic.
         :return: It returns True if the topic was deleted successfully; else it returns False otherwise.
