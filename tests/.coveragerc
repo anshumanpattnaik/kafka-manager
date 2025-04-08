@@ -1,0 +1,17 @@
+[run]
+relative_files=true
+source=
+    src
+
+omit=
+    src/tests/**/*.py
+    **/conftest.py
+    **/test_*.py
+    **/*test_.py
+    **/__init__.py
+
+[report]
+    fail_under=0
+    skip_empty=true
+    exclude_lines=
+        "if __name__ == .__main__.:"
