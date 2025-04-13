@@ -50,6 +50,18 @@ class TestKafkaManager:
             yield mock_stop
 
     @pytest.fixture
+    def mock_stop_all_consumers(self) -> Generator[Mock, Any, None]:
+        """ stop all consumers fixture """
+        with patch(f'{TARGET}.KafkaManager.stop_all_consumers') as mock_stop:
+            yield mock_stop
+
+    @pytest.fixture
+    def mock_close_admin_client(self) -> Generator[Mock, Any, None]:
+        """ close admin client fixture """
+        with patch(f'{TARGET}.KafkaManager.close_admin_client') as close_admin_client:
+            yield close_admin_client
+
+    @pytest.fixture
     def mock_start_consumer(self) -> Generator[Mock, Any, None]:
         """ start consumer fixture """
         with patch(f'src.kafka_consumer_client.KafkaConsumerClient.start') as mock_start:
@@ -66,6 +78,12 @@ class TestKafkaManager:
         """ is_producer_running fixture """
         with patch(f'{TARGET}.KafkaProducerClient.is_producer_running') as mock_producer_running:
             yield mock_producer_running
+
+    @pytest.fixture
+    def mock_new_topic(self) -> Generator[Mock, Any, None]:
+        """ new_topic fixture """
+        with patch(f'{TARGET}.NewTopic') as mock_new_topic:
+            yield mock_new_topic
 
     def test_start_producer(self, mock_start_producer: Mock, kafka_manager: Mock) -> None:
         """ Test start producer method """
@@ -189,3 +207,119 @@ class TestKafkaManager:
         admin_client = kafka_manager.connect_admin_client()
         assert admin_client == False
         assert kafka_manager._admin_client is None
+
+    def test_create_topic(self, kafka_admin_client: Mock, kafka_manager: Mock, mock_new_topic: Mock) -> None:
+        """ Test create topic method """
+        mock_kafka_admin_client_instance = kafka_admin_client.return_value
+        mock_new_topic_instance = mock_new_topic.return_value
+
+        mock_topic_name = "test_topic"
+        mock_num_partitions = 2
+        mock_replication_factor = 1
+
+        admin_client_response = kafka_manager.connect_admin_client()
+        assert admin_client_response == True
+
+        create_topic_response = kafka_manager.create_topic(mock_topic_name, mock_num_partitions,
+                                                           mock_replication_factor)
+        assert create_topic_response == True
+
+        mock_kafka_admin_client_instance.create_topics.assert_called_once_with(new_topics=[mock_new_topic_instance],
+                                                                               validate_only=False)
+        mock_new_topic.assert_called_once_with(name=mock_topic_name, num_partitions=mock_num_partitions,
+                                               replication_factor=mock_replication_factor)
+
+    def test_create_topic_with_not_connected_admin_client(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+        """ Test create topic method with not connected admin client """
+        kafka_admin_client.return_value = None
+
+        mock_topic_name = "test_topic"
+        mock_num_partitions = 2
+        mock_replication_factor = 1
+
+        create_topic_response = kafka_manager.create_topic(mock_topic_name, mock_num_partitions,
+                                                           mock_replication_factor)
+        assert create_topic_response == False
+
+    def test_create_topic_with_kafka_error(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+        """ Test create topic method with Kafka error """
+        mock_kafka_admin_client_instance = kafka_admin_client.return_value
+        mock_kafka_admin_client_instance.create_topics.side_effect = KafkaError('Failed to connect to Kafka Admin')
+
+        admin_client_response = kafka_manager.connect_admin_client()
+        assert admin_client_response == True
+
+        mock_topic_name = "test_topic"
+        mock_num_partitions = 2
+        mock_replication_factor = 1
+
+        create_topic_response = kafka_manager.create_topic(mock_topic_name, mock_num_partitions,
+                                                           mock_replication_factor)
+        assert create_topic_response == False
+
+    def test_delete_topic(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+        """ Test delete topic method """
+        mock_kafka_admin_client_instance = kafka_admin_client.return_value
+
+        admin_client_response = kafka_manager.connect_admin_client()
+        assert admin_client_response == True
+
+        mock_topic_name = "test_topic"
+        delete_topic_response = kafka_manager.delete_topic(mock_topic_name)
+        assert delete_topic_response == True
+        mock_kafka_admin_client_instance.delete_topics.assert_called_once_with(topics=[mock_topic_name])
+
+    def test_delete_topic_with_not_connected_admin_client(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+        """ Test delete topic method with not connected admin client """
+        kafka_admin_client.return_value = None
+
+        mock_topic_name = "test_topic"
+        delete_topic_response = kafka_manager.delete_topic(mock_topic_name)
+        assert delete_topic_response == False
+
+    def test_delete_topic_with_kafka_error(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+        """ Test delete topic method with Kafka error """
+        mock_kafka_admin_client_instance = kafka_admin_client.return_value
+        mock_kafka_admin_client_instance.delete_topics.side_effect = KafkaError('Failed to connect to Kafka Admin')
+
+        admin_client_response = kafka_manager.connect_admin_client()
+        assert admin_client_response == True
+
+        mock_topic_name = "test_topic"
+        delete_topic_response = kafka_manager.delete_topic(mock_topic_name)
+        assert delete_topic_response == False
+
+    def test_close_admin_client(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+        """ Test close admin client """
+        mock_kafka_admin_client_instance = kafka_admin_client.return_value
+        kafka_manager._admin_client = mock_kafka_admin_client_instance
+
+        actual_response = kafka_manager.close_admin_client()
+        assert actual_response == True
+        mock_kafka_admin_client_instance.close.assert_called_once()
+        assert kafka_manager._admin_client is None
+
+    def test_close_admin_client_with_kafka_error(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+        """ Test close admin client with Kafka error """
+        mock_kafka_admin_client_instance = kafka_admin_client.return_value
+        mock_kafka_admin_client_instance.close.side_effect = KafkaError('Failed to connect to Kafka Admin')
+        kafka_manager._admin_client = mock_kafka_admin_client_instance
+
+        actual_response = kafka_manager.close_admin_client()
+        assert actual_response == False
+        assert kafka_manager._admin_client is mock_kafka_admin_client_instance
+
+    def test_close_admin_client_with_already_closed(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+        """ Test close admin client with already closed """
+        mock_kafka_admin_client_instance = kafka_admin_client.return_value
+        actual_response = kafka_manager.close_admin_client()
+        assert actual_response == True
+
+    def test_close(self, kafka_manager: Mock, mock_stop_producer: Mock, mock_stop_all_consumers: Mock,
+                   mock_close_admin_client: Mock) -> None:
+        """ Test close method """
+        kafka_manager.close()
+
+        mock_stop_producer.assert_called_once()
+        mock_stop_all_consumers.assert_called_once()
+        mock_close_admin_client.assert_called_once()
