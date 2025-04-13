@@ -60,7 +60,7 @@ class KafkaConsumerClient:
 
         try:
             self._consumer = KafkaConsumer(
-                *self._topics,
+                topics=self._topics,
                 bootstrap_servers=self._bootstrap_servers,
                 group_id=self._group_id,
                 auto_offset_reset=self._auto_offset_reset,
@@ -108,7 +108,6 @@ class KafkaConsumerClient:
                             return
                 time.sleep(0.01)
                 return
-            print(f'Kafka consumer group {self._group_id} stopped.')
         except KafkaError as e:
             print(f"Error during Kafka consumption: {e}")
         finally:
