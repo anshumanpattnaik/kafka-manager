@@ -309,9 +309,8 @@ class TestKafkaManager:
         assert actual_response == False
         assert kafka_manager._admin_client is mock_kafka_admin_client_instance
 
-    def test_close_admin_client_with_already_closed(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+    def test_close_admin_client_with_already_closed(self, kafka_manager: Mock) -> None:
         """ Test close admin client with already closed """
-        mock_kafka_admin_client_instance = kafka_admin_client.return_value
         actual_response = kafka_manager.close_admin_client()
         assert actual_response == True
 
