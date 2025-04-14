@@ -60,7 +60,7 @@ class KafkaConsumerClient:
 
         try:
             self._consumer = KafkaConsumer(
-                topics=self._topics,
+                *self._topics,
                 bootstrap_servers=self._bootstrap_servers,
                 group_id=self._group_id,
                 auto_offset_reset=self._auto_offset_reset,
