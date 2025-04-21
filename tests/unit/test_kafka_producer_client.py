@@ -1,5 +1,4 @@
-from typing import Generator, Any
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, MagicMock
 
 import pytest
 from kafka.errors import KafkaError
