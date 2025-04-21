@@ -121,7 +121,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-src/.env
+kafka_manager/.env
 .venv
 env/
 venv/

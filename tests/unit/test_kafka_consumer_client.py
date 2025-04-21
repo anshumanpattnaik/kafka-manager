@@ -7,7 +7,7 @@ from kafka.errors import KafkaError
 
 from src.kafka_consumer_client import KafkaConsumerClient
 
-TARGET = 'src.kafka_consumer_client'
+TARGET = 'kafka_manager.kafka_consumer_client'
 MOCK_BOOTSTRAP_SERVERS = 'localhost:9092'
 TEST_TOPIC = 'test_topic'
 TEST_GROUP_ID = 'test_group_id'

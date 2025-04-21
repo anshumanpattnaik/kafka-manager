@@ -6,7 +6,7 @@ from kafka.errors import KafkaError
 
 from src.kafka_producer_client import KafkaProducerClient
 
-TARGET = 'src.kafka_producer_client'
+TARGET = 'kafka_manager.kafka_producer_client'
 MOCK_BOOTSTRAP_SERVER = 'localhost:9092'
 TEST_TOPIC = 'test_topic'
 

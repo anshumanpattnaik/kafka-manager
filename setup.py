@@ -5,11 +5,11 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding='utf-8'
     long_description = file.read()
 
 version = {}
-with open(os.path.join(os.path.dirname(__file__), 'src', '__version__.py')) as file:
+with open(os.path.join(os.path.dirname(__file__), 'kafka_manager', '__version__.py')) as file:
     exec(file.read(), version)
 
 setup(
-    name='kafka-manager',
+    name='kafka_manager',
     version=version['__version__'],
     description='A Python library for managing Kafka Producers, Consumers and Topics',
     long_description=long_description,

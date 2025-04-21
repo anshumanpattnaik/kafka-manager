@@ -1,8 +1,8 @@
 from kafka.admin import NewTopic, KafkaAdminClient
 from kafka.errors import KafkaError
 
-from src.kafka_consumer_client import KafkaConsumerClient
-from src.kafka_producer_client import KafkaProducerClient
+from kafka_manager.kafka_consumer_client import KafkaConsumerClient
+from kafka_manager.kafka_producer_client import KafkaProducerClient
 
 
 class KafkaManager:

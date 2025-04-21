@@ -1,6 +1,6 @@
 import json
 
-from src.kafka_manager import KafkaManager
+from kafka_manager.kafka_manager import KafkaManager
 
 bootstrap_servers = ['localhost:9092']  # Replace with your Kafka broker addresses
 topic_name = 'example_topic'  # Replace topic name with your choice

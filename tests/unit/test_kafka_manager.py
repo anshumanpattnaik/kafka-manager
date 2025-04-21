@@ -6,7 +6,7 @@ from kafka.errors import KafkaError
 
 from src.kafka_manager import KafkaManager
 
-TARGET = 'src.kafka_manager'
+TARGET = 'kafka_manager.kafka_manager'
 MOCK_BOOTSTRAP_SERVERS = 'localhost:9092'
 
 
@@ -64,7 +64,7 @@ class TestKafkaManager:
     @pytest.fixture
     def mock_start_consumer(self) -> Generator[Mock, Any, None]:
         """ start consumer fixture """
-        with patch(f'src.kafka_consumer_client.KafkaConsumerClient.start') as mock_start:
+        with patch(f'kafka_manager.kafka_consumer_client.KafkaConsumerClient.start') as mock_start:
             yield mock_start
 
     @pytest.fixture
