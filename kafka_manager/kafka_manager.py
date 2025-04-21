@@ -112,9 +112,8 @@ class KafkaManager:
         """
         if consumer_id in self._consumers:
             return self._consumers[consumer_id].start()
-        else:
-            print(f"Consumer with ID {consumer_id} not found.")
-            return False
+        print(f"Consumer with ID {consumer_id} not found.")
+        return False
 
     def consume_messages(
         self,
@@ -145,9 +144,8 @@ class KafkaManager:
         """
         if consumer_id in self._consumers:
             return self._consumers[consumer_id].stop()
-        else:
-            print(f'Consumer with ID {consumer_id} not found.')
-            return False
+        print(f'Consumer with ID {consumer_id} not found.')
+        return False
 
     def stop_all_consumers(self):
         """

@@ -1,10 +1,10 @@
 [run]
 relative_files=true
 source=
-    src
+    kafka_manager
 
 omit=
-    src/tests/**/*.py
+    kafka_manager/tests/**/*.py
     **/conftest.py
     **/test_*.py
     **/*test_.py
