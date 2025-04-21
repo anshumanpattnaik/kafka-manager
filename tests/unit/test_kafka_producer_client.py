@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch, MagicMock
 import pytest
 from kafka.errors import KafkaError
 
-from src.kafka_producer_client import KafkaProducerClient
+from kafka_manager.kafka_producer_client import KafkaProducerClient
 
 TARGET = 'kafka_manager.kafka_producer_client'
 MOCK_BOOTSTRAP_SERVER = 'localhost:9092'

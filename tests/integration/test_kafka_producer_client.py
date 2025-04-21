@@ -1,7 +1,7 @@
 import unittest
 
-from src.kafka_consumer_client import KafkaConsumerClient
-from src.kafka_producer_client import KafkaProducerClient
+from kafka_manager.kafka_consumer_client import KafkaConsumerClient
+from kafka_manager.kafka_producer_client import KafkaProducerClient
 from tests.integration.integration_test_utils import TestUtils
 
 

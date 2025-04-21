@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch, MagicMock
 import pytest
 from kafka.errors import KafkaError
 
-from src.kafka_manager import KafkaManager
+from kafka_manager.kafka_manager import KafkaManager
 
 TARGET = 'kafka_manager.kafka_manager'
 MOCK_BOOTSTRAP_SERVERS = 'localhost:9092'

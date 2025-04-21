@@ -4,8 +4,8 @@ import uuid
 
 from kafka import KafkaAdminClient
 
-from src.kafka_consumer_client import KafkaConsumerClient
-from src.kafka_manager import KafkaManager
+from kafka_manager.kafka_consumer_client import KafkaConsumerClient
+from kafka_manager.kafka_manager import KafkaManager
 from tests.integration.integration_test_utils import TestUtils
 
 
