@@ -1,13 +1,11 @@
 import json
-from typing import Generator, Any
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, MagicMock
 
 import pytest
 from kafka.errors import KafkaError
 
 from kafka_manager.kafka_consumer_client import KafkaConsumerClient
 
-TARGET = 'kafka_manager.kafka_consumer_client'
 MOCK_BOOTSTRAP_SERVERS = 'localhost:9092'
 TEST_TOPIC = 'test_topic'
 TEST_GROUP_ID = 'test_group_id'
@@ -28,12 +26,6 @@ class TestKafkaConsumerClient:
             topics=[TEST_TOPIC],
         )
         return consumer_client
-
-    @pytest.fixture
-    def mock_kafka_consumer(self) -> Generator[Mock, Any, None]:
-        """ KafkaConsumer fixture """
-        with patch(f'{TARGET}.KafkaConsumer') as mock_kafka_consumer:
-            yield mock_kafka_consumer
 
     def test_kafka_consumer_client_start(self, kafka_consumer_client: Mock, mock_kafka_consumer: Mock) -> None:
         """ Test KafkaConsumerClient start method """

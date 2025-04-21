@@ -6,84 +6,11 @@ from kafka.errors import KafkaError
 
 from kafka_manager.kafka_manager import KafkaManager
 
-TARGET = 'kafka_manager.kafka_manager'
 MOCK_BOOTSTRAP_SERVERS = 'localhost:9092'
 
 
 class TestKafkaManager:
     """ Test KafkaManager Class """
-
-    @pytest.fixture
-    def kafka_manager(self) -> KafkaManager:
-        """ KafkaManager fixture """
-        manager = KafkaManager(bootstrap_servers=MOCK_BOOTSTRAP_SERVERS)
-        return manager
-
-    @pytest.fixture
-    def kafka_producer_client(self) -> Generator[Mock, Any, None]:
-        """ KafkaProducerClient fixture """
-        with patch(f'{TARGET}.KafkaProducerClient') as mock_kafka_producer_client:
-            yield mock_kafka_producer_client
-
-    @pytest.fixture
-    def kafka_consumer_client(self) -> Generator[Mock, Any, None]:
-        """ KafkaConsumerClient fixture """
-        with patch(f'{TARGET}.KafkaConsumerClient') as mock_kafka_consumer_client:
-            yield mock_kafka_consumer_client
-
-    @pytest.fixture
-    def kafka_admin_client(self) -> Generator[Mock, Any, None]:
-        """ KafkaAdminClient fixture """
-        with patch(f'{TARGET}.KafkaAdminClient') as mock_kafka_admin_client:
-            yield mock_kafka_admin_client
-
-    @pytest.fixture
-    def mock_start_producer(self) -> Generator[Mock, Any, None]:
-        """ start producer fixture """
-        with patch(f'{TARGET}.KafkaProducerClient.start') as mock_start:
-            yield mock_start
-
-    @pytest.fixture
-    def mock_stop_producer(self) -> Generator[Mock, Any, None]:
-        """ stop producer fixture """
-        with patch(f'{TARGET}.KafkaProducerClient.stop') as mock_stop:
-            yield mock_stop
-
-    @pytest.fixture
-    def mock_stop_all_consumers(self) -> Generator[Mock, Any, None]:
-        """ stop all consumers fixture """
-        with patch(f'{TARGET}.KafkaManager.stop_all_consumers') as mock_stop:
-            yield mock_stop
-
-    @pytest.fixture
-    def mock_close_admin_client(self) -> Generator[Mock, Any, None]:
-        """ close admin client fixture """
-        with patch(f'{TARGET}.KafkaManager.close_admin_client') as close_admin_client:
-            yield close_admin_client
-
-    @pytest.fixture
-    def mock_start_consumer(self) -> Generator[Mock, Any, None]:
-        """ start consumer fixture """
-        with patch(f'kafka_manager.kafka_consumer_client.KafkaConsumerClient.start') as mock_start:
-            yield mock_start
-
-    @pytest.fixture
-    def mock_send_message(self) -> Generator[Mock, Any, None]:
-        """ send message fixture"""
-        with patch(f'{TARGET}.KafkaProducerClient.send_message') as mock_send_message:
-            yield mock_send_message
-
-    @pytest.fixture
-    def mock_is_producer_running(self) -> Generator[Mock, Any, None]:
-        """ is_producer_running fixture """
-        with patch(f'{TARGET}.KafkaProducerClient.is_producer_running') as mock_producer_running:
-            yield mock_producer_running
-
-    @pytest.fixture
-    def mock_new_topic(self) -> Generator[Mock, Any, None]:
-        """ new_topic fixture """
-        with patch(f'{TARGET}.NewTopic') as mock_new_topic:
-            yield mock_new_topic
 
     def test_start_producer(self, mock_start_producer: Mock, kafka_manager: Mock) -> None:
         """ Test start producer method """

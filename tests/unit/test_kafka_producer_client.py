@@ -6,7 +6,6 @@ from kafka.errors import KafkaError
 
 from kafka_manager.kafka_producer_client import KafkaProducerClient
 
-TARGET = 'kafka_manager.kafka_producer_client'
 MOCK_BOOTSTRAP_SERVER = 'localhost:9092'
 TEST_TOPIC = 'test_topic'
 
@@ -21,12 +20,6 @@ class TestKafkaProducerClient:
             bootstrap_servers=[MOCK_BOOTSTRAP_SERVER]
         )
         return producer_client
-
-    @pytest.fixture
-    def mock_kafka_producer(self) -> Generator[Mock, Any, None]:
-        """ KafkaProducer fixture """
-        with patch(f'{TARGET}.KafkaProducer') as mock_kafka_producer:
-            yield mock_kafka_producer
 
     def test_kafka_producer_client_start(self, kafka_producer_client: Mock, mock_kafka_producer: Mock) -> None:
         """ Test KafkaProducerClient start method """
