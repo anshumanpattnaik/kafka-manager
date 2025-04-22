@@ -71,40 +71,41 @@ def mock_close_admin_client() -> Generator[Mock, Any, None]:
 @pytest.fixture
 def mock_start_consumer() -> Generator[Mock, Any, None]:
     """ start consumer fixture """
-    with patch(f'kafka_manager.kafka_consumer_client.KafkaConsumerClient.start') as mock_start:
+    with patch('kafka_manager.kafka_consumer_client.KafkaConsumerClient.start') as mock_start:
         yield mock_start
 
 
 @pytest.fixture
 def mock_send_message() -> Generator[Mock, Any, None]:
     """ send message fixture"""
-    with patch(f'{TARGET_KAFKA_MANAGER}.KafkaProducerClient.send_message') as mock_send_message:
-        yield mock_send_message
+    with patch(f'{TARGET_KAFKA_MANAGER}.KafkaProducerClient.send_message') as send_message:
+        yield send_message
 
 
 @pytest.fixture
 def mock_is_producer_running() -> Generator[Mock, Any, None]:
     """ is_producer_running fixture """
-    with patch(f'{TARGET_KAFKA_MANAGER}.KafkaProducerClient.is_producer_running') as mock_producer_running:
+    with patch(f'{TARGET_KAFKA_MANAGER}.KafkaProducerClient.'
+               f'is_producer_running') as mock_producer_running:
         yield mock_producer_running
 
 
 @pytest.fixture
 def mock_new_topic() -> Generator[Mock, Any, None]:
     """ new_topic fixture """
-    with patch(f'{TARGET_KAFKA_MANAGER}.NewTopic') as mock_new_topic:
-        yield mock_new_topic
+    with patch(f'{TARGET_KAFKA_MANAGER}.NewTopic') as new_topic:
+        yield new_topic
 
 
 @pytest.fixture
 def mock_kafka_consumer() -> Generator[Mock, Any, None]:
     """ KafkaConsumer fixture """
-    with patch(f'{TARGET_KAFKA_CONSUMER}.KafkaConsumer') as mock_kafka_consumer:
-        yield mock_kafka_consumer
+    with patch(f'{TARGET_KAFKA_CONSUMER}.KafkaConsumer') as kafka_consumer:
+        yield kafka_consumer
 
 
 @pytest.fixture
 def mock_kafka_producer() -> Generator[Mock, Any, None]:
     """ KafkaProducer fixture """
-    with patch(f'{TARGET_KAFKA_PRODUCER}.KafkaProducer') as mock_kafka_producer:
-        yield mock_kafka_producer
+    with patch(f'{TARGET_KAFKA_PRODUCER}.KafkaProducer') as kafka_producer:
+        yield kafka_producer

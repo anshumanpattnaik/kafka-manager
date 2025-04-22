@@ -117,7 +117,7 @@ class KafkaProducerClient:
         """
         try:
             self._producer.flush()
-        except KafkaError as e:
+        except Exception as e:
             raise KafkaError(f'Failed to flush producer: {e}')
 
     def stop(self):

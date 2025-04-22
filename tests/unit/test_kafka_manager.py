@@ -45,13 +45,16 @@ class TestKafkaManager:
         auto_offset_reset = "earliest"
 
         mock_consumer_instance = kafka_consumer_client.return_value
-        consumer = kafka_manager.create_consumer(topics=topics, group_id=group_id, auto_offset_reset=auto_offset_reset)
+        consumer = kafka_manager.create_consumer(topics=topics, group_id=group_id,
+                                                 auto_offset_reset=auto_offset_reset)
 
         assert consumer == mock_consumer_instance
-        kafka_consumer_client.assert_called_once_with(bootstrap_servers=MOCK_BOOTSTRAP_SERVERS, topics=topics,
-                                                      group_id=group_id, auto_offset_reset=auto_offset_reset)
+        kafka_consumer_client.assert_called_once_with(bootstrap_servers=MOCK_BOOTSTRAP_SERVERS,
+                                                      topics=topics, group_id=group_id,
+                                                      auto_offset_reset=auto_offset_reset)
 
-    def test_create_consumer_with_kafka_error(self, kafka_consumer_client: Mock, kafka_manager: Mock) -> None:
+    def test_create_consumer_with_kafka_error(self, kafka_consumer_client: Mock,
+                                              kafka_manager: Mock) -> None:
         """ Test consumer creation failed """
         topics = ["mock_topic_1"]
 
@@ -68,7 +71,8 @@ class TestKafkaManager:
         assert actual_response is True
         mock_kafka_consumer_client_instance.start.assert_called_once()
 
-    def test_start_consumer_with_invalid_consumer_id(self, kafka_consumer_client: Mock, kafka_manager: Mock) -> None:
+    def test_start_consumer_with_invalid_consumer_id(self, kafka_consumer_client: Mock,
+                                                     kafka_manager: Mock) -> None:
         """ Test start consumer with invalid consumer id """
         mock_kafka_consumer_client_instance = kafka_consumer_client.return_value
         actual_response = kafka_manager.start_consumer('invalid_consumer_id')
@@ -85,7 +89,8 @@ class TestKafkaManager:
         kafka_manager.consume_messages('test_consumer', message_handler)
         mock_kafka_consumer_client_instance.consume.assert_called_once_with(message_handler)
 
-    def test_consume_messages_with_invalid_consumer_id(self, kafka_consumer_client: Mock, kafka_manager: Mock) -> None:
+    def test_consume_messages_with_invalid_consumer_id(self, kafka_consumer_client: Mock,
+                                                       kafka_manager: Mock) -> None:
         """ Test consume messages with invalid consumer id"""
         mock_kafka_consumer_client_instance = kafka_consumer_client.return_value
         message_handler = MagicMock()
@@ -131,7 +136,8 @@ class TestKafkaManager:
         assert admin_client == False
         assert kafka_manager._admin_client is None
 
-    def test_create_topic(self, kafka_admin_client: Mock, kafka_manager: Mock, mock_new_topic: Mock) -> None:
+    def test_create_topic(self, kafka_admin_client: Mock, kafka_manager: Mock,
+                          mock_new_topic: Mock) -> None:
         """ Test create topic method """
         mock_kafka_admin_client_instance = kafka_admin_client.return_value
         mock_new_topic_instance = mock_new_topic.return_value
@@ -149,7 +155,8 @@ class TestKafkaManager:
 
         mock_kafka_admin_client_instance.create_topics.assert_called_once_with(new_topics=[mock_new_topic_instance],
                                                                                validate_only=False)
-        mock_new_topic.assert_called_once_with(name=mock_topic_name, num_partitions=mock_num_partitions,
+        mock_new_topic.assert_called_once_with(name=mock_topic_name,
+                                               num_partitions=mock_num_partitions,
                                                replication_factor=mock_replication_factor)
 
     def test_create_topic_with_not_connected_admin_client(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
