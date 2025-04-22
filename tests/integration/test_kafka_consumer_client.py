@@ -66,7 +66,11 @@ class TestKafkaConsumerClient(unittest.TestCase):
             "message": "Test Integration Messages"
         }
 
-        self.assertIsNotNone(self.producer_client.send_message(self.SINGLE_TEST_TOPIC, test_message))
+        self.assertIsNotNone(
+            self.producer_client.send_message(
+                self.SINGLE_TEST_TOPIC, test_message
+            )
+        )
 
         consumer_client = KafkaConsumerClient(
             bootstrap_servers=self.KAFKA_BOOTSTRAP_SERVERS,

@@ -31,7 +31,9 @@ class TestKafkaManager(unittest.TestCase):
     def tearDownClass(cls):
         """ Clean up Kafka Topics after running all tests """
         if cls.test_utils.is_kafka_broker_available(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS):
-            cls.test_utils.delete_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.TEST_TOPIC)
+            cls.test_utils.delete_topic(
+                bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.TEST_TOPIC
+            )
 
     def setUp(self):
         """ Setup Kafka Manager """
