@@ -1,3 +1,11 @@
+"""
+Kafka Manager Module
+
+The Kafka Manager module provides a high-level abstraction over the `kafka-python` library to
+simplify interaction with Apache Kafka. It offers many functionalities to manage Kafka Producers,
+Consumers, Topics, and Admin Client operations, encapsulating the complexity behind
+`kafka-python` usage.
+"""
 from kafka.admin import NewTopic, KafkaAdminClient
 from kafka.errors import KafkaError
 
@@ -7,10 +15,11 @@ from kafka_manager.kafka_producer_client import KafkaProducerClient
 
 class KafkaManager:
     """
-    A utility class to manage Kafka producers, consumers, and topics. It provides a higher level of abstraction for
-    interacting with Kafka, encapsulating and defining methods to manage producers and consumers, and allowing
-    administrative operations like topic creation, deletion, etc. It leverages the `KafkaProducerClient` and
-    `KafkaConsumerClient` classes for lifecycle management to access and invoke the methods of producers and consumers.
+    A utility class to manage Kafka producers, consumers, and topics. It provides a higher level of
+    abstraction for interacting with Kafka, encapsulating and defining methods to manage producers
+    and consumers, and allowing administrative operations like topic creation, deletion, etc. It
+    leverages the `KafkaProducerClient` and `KafkaConsumerClient` classes for lifecycle management
+    to access and invoke the methods of producers and consumers.
     """
 
     def __init__(
@@ -18,21 +27,36 @@ class KafkaManager:
         bootstrap_servers
     ):
         """
-        Initializes the Kafka manager, establishes configurations for connecting to the Kafka broker(s) and instantiates
-        `KafkaProducerClient` and initializes admin client.
+        Initializes the Kafka manager, establishes configurations for connecting to the
+        Kafka broker(s) and instantiates `KafkaProducerClient` and initializes admin client.
 
-        :param bootstrap_servers: A list of Kafka broker addresses (e.g., ['localhost:9092', 'kafka-broker-1:9092'])
-                                These addresses are used to establish the initial connection to the Kafka cluster.
+        :param bootstrap_servers:
+            A list of Kafka broker addresses (e.g., ['localhost:9092', 'kafka-broker-1:9092'])
+            These addresses are used to establish the initial connection to the Kafka cluster.
         """
         self._bootstrap_servers = bootstrap_servers
         self._producer_client = KafkaProducerClient(bootstrap_servers=self._bootstrap_servers)
         self._admin_client = None
         self._consumers = {}
 
+    @property
+    def producer_client(self):
+        """
+        Returns the Kafka producer client.
+        """
+        return self._producer_client
+
+    @property
+    def admin_client(self):
+        """
+        Returns the Kafka admin client.
+        """
+        return self._admin_client
+
     def start_producer(self):
         """
-        This method starts the Kafka producer client and establishes the connection to the Kafka broker(s), which this
-        instance manages.
+        This method starts the Kafka producer client and establishes the connection to the
+        Kafka broker(s), which this instance manages.
 
         :return: It returns True if the Kafka producer started successfully else it returns False.
         """
@@ -44,11 +68,13 @@ class KafkaManager:
         value
     ):
         """
-        This method sends message to the specified Kafka topic by using the managed Kafka producer client.
+        This method sends message to the specified Kafka topic by using the managed
+        Kafka producer client.
 
         :param topic: The name of the Kafka topic send the message to.
         :param value: The serialized message JSON payload.
-        :return: If the sent message was successful, it returns Metadata; otherwise, it returns None.
+        :return: If the sent message was successful, it returns Metadata; otherwise, it returns
+                None.
         """
         return self._producer_client.send_message(topic=topic, value=value)
 
@@ -64,7 +90,8 @@ class KafkaManager:
         """
         This method checks if the managed Kafka producer client is running.
 
-        :return: It returns True if the managed Kafka producer client is running and False otherwise.
+        :return: It returns True if the managed Kafka producer client is running and False
+                otherwise.
         """
         return self._producer_client.is_producer_running()
 
@@ -76,24 +103,28 @@ class KafkaManager:
         **kwargs
     ):
         """
-        This method creates a new `KafkaConsumerClient` instance with the given configuration, establishes the
-        connection to the Kafka broker(s), and stores the specific consumer's configuration in the `consumers`
-        dictionary with the group_id key.
+        This method creates a new `KafkaConsumerClient` instance with the given configuration,
+        establishes the connection to the Kafka broker(s), and stores the specific consumer's
+        configuration in the `consumers` dictionary with the group_id key.
 
         :param topics: A list of Kafka topics to subscribe to.
         :param group_id: A consumer group_id and defaults to None.
-        :param auto_offset_reset: An optional parameter to sort the message ordering, which is set by default to
-                                'latest' when the initial offset in Kafka does not exist.
-                                - 'earliest': Automatically sorts messages earlier than the initial offset.
-                                - 'latest': Automatically sorts messages later than the initial offset.
-        :param kwargs: Additional arguments are passed directly to the Kafka Consumer constructor, which allows further
-                    customization of the consumer (e.g., Security Settings, etc.).
+        :param auto_offset_reset:
+                An optional parameter to sort the message ordering, which is set by default to
+                'latest' when the initial offset in Kafka does not exist.
+                    - 'earliest': Automatically sorts messages earlier than the initial offset.
+                    - 'latest': Automatically sorts messages later than the initial offset.
+        :param kwargs: Additional arguments are passed directly to the Kafka Consumer constructor,
+                which allows further customization of the consumer (e.g., Security Settings, etc.).
         :return: It returns the new `KafkaConsumerClient` instance.
         """
         try:
-            consumer_client = KafkaConsumerClient(bootstrap_servers=self._bootstrap_servers, topics=topics,
-                                                  group_id=group_id, auto_offset_reset=auto_offset_reset, **kwargs)
-            self._consumers[group_id if group_id else f"default_consumer_{len(self._consumers)}"] = consumer_client
+            consumer_client = KafkaConsumerClient(bootstrap_servers=self._bootstrap_servers,
+                                                  topics=topics, group_id=group_id,
+                                                  auto_offset_reset=auto_offset_reset,
+                                                  **kwargs)
+            self._consumers[group_id if group_id else
+            f"default_consumer_{len(self._consumers)}"] = consumer_client
             return consumer_client
         except KafkaError as e:
             print(f'Error in creating consumer: {e}')
@@ -107,8 +138,8 @@ class KafkaManager:
         This method starts a specific `KafkaConsumerClient` instance of the given `consumer_id`.
 
         :param consumer_id: An ID of the consumer client to start.
-        :return: It returns True if the consumer started successfully else, it returns False if the consumer ID is not
-                found.
+        :return: It returns True if the consumer started successfully else, it returns False if the
+                consumer ID is not found.
         """
         if consumer_id in self._consumers:
             return self._consumers[consumer_id].start()
@@ -139,8 +170,8 @@ class KafkaManager:
         This method stops a specific `KafkaConsumerClient` instance of the given `consumer_id`.
 
         :param consumer_id: An ID of the consumer client to stop consuming messages from.
-        :return: It returns True if the consumer stopped successfully else, it returns False if the consumer ID
-                is not found.
+        :return: It returns True if the consumer stopped successfully else, it returns False if the
+                consumer ID is not found.
         """
         if consumer_id in self._consumers:
             return self._consumers[consumer_id].stop()
@@ -151,16 +182,17 @@ class KafkaManager:
         """
         This method stops all `KafkaConsumerClient` instances.
         """
-        for consumer_id, consumer_client in self._consumers.items():
+        for _, consumer_client in self._consumers.items():
             consumer_client.stop()
         self._consumers = {}
 
     def connect_admin_client(self):
         """
-        This method connects to the Kafka admin client, establishes a connection to the Kafka broker(s), and performs
-        administrative operations on the Kafka cluster.
+        This method connects to the Kafka admin client, establishes a connection to the
+        Kafka broker(s), and performs administrative operations on the Kafka cluster.
 
-        :return: It returns True if the connection to the Kafka admin client was successful; else, it returns False.
+        :return: It returns True if the connection to the Kafka admin client was successful; else,
+            it returns False.
         """
         try:
             self._admin_client = KafkaAdminClient(
@@ -179,13 +211,14 @@ class KafkaManager:
         replication_factor: int = 1
     ):
         """
-        This method creates a new topic with the given `topic_name` and it's an administrative operation, it can only be
-        created by the admin client.
+        This method creates a new topic with the given `topic_name` and it's an administrative
+        operation, it can only be created by the admin client.
 
         :param topic_name: Name of the new topic.
         :param num_partitions: Number of partitions of the new topic. Defaults to 1.
         :param replication_factor: Replication factor of the new topic. Defaults to 1.
-        :return: It returns True if the topic was created successfully; else it returns False otherwise.
+        :return: It returns True if the topic was created successfully; else it returns False
+            otherwise.
         """
         if self._admin_client is None:
             print('Kafka admin client is not connected.')
@@ -207,11 +240,12 @@ class KafkaManager:
         topic_name
     ):
         """
-        This method deletes a topic with the given `topic_name` and it's an administrative operation, it can only be
-        deleted by the admin client.
+        This method deletes a topic with the given `topic_name` and it's an administrative
+        operation, it can only be deleted by the admin client.
 
         :param topic_name: Name of the new topic.
-        :return: It returns True if the topic was deleted successfully; else it returns False otherwise.
+        :return: It returns True if the topic was deleted successfully; else it returns False
+            otherwise.
         """
         if self._admin_client is None:
             print('Kafka admin client is not connected.')
@@ -229,7 +263,8 @@ class KafkaManager:
         """
         This method closes the Kafka admin client connection.
 
-        :return: It returns True if the Kafka admin client was closed successfully; else it returns False otherwise.
+        :return: It returns True if the Kafka admin client was closed successfully; else it returns
+            False otherwise.
         """
         if self._admin_client:
             try:
@@ -244,9 +279,9 @@ class KafkaManager:
 
     def close(self):
         """
-        This method closes all the Kafka connections (producers, consumers, and admin clients). It's essential to call
-        this method to ensure that all producers, consumers, and admin clients are stopped properly and resources are
-        released.
+        This method closes all the Kafka connections (producers, consumers, and admin clients).
+        It's essential to call this method to ensure that all producers, consumers, and admin
+        clients are stopped properly and resources are released.
         """
         self.stop_producer()
         self.stop_all_consumers()

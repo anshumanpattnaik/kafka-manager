@@ -3,8 +3,8 @@ import json
 from kafka_manager.kafka_manager import KafkaManager
 
 bootstrap_servers = ['localhost:9092']  # Replace with your Kafka broker addresses
-topic_name = 'example_topic'  # Replace topic name with your choice
-group_id = 'example_group'  # Replace consumer group ID with your choice
+topic_name = 'example_topic_4'  # Replace topic name with your choice
+group_id = 'example_group_4'  # Replace consumer group ID with your choice
 
 
 def message_handler(message):
@@ -74,6 +74,7 @@ def main():
     kafka_manager.consume_messages(consumer_id=group_id, message_handler=message_handler)
 
     # 9. Stop Kafka producers, Kafka consumers and Admin Client.
+    kafka_manager.producer_client.flush()
     kafka_manager.stop_producer()
     kafka_manager.stop_consumer(consumer_id=group_id)
     kafka_manager.close_admin_client()
