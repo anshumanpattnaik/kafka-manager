@@ -20,16 +20,25 @@ class TestKafkaConsumerClient(unittest.TestCase):
             bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS
         ):
             raise unittest.SkipTest("Kafka broker is not available!")
-        cls.test_utils.create_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.SINGLE_TEST_TOPIC)
-        cls.test_utils.create_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.MULTIPLE_TEST_TOPIC)
+        cls.test_utils.create_topic(
+            bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS,
+            topic_name=cls.SINGLE_TEST_TOPIC
+        )
+        cls.test_utils.create_topic(
+            bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS,
+            topic_name=cls.MULTIPLE_TEST_TOPIC
+        )
 
     @classmethod
     def tearDownClass(cls):
         """ Clean up Kafka Topics after running all tests """
         if cls.test_utils.is_kafka_broker_available(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS):
-            cls.test_utils.delete_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.SINGLE_TEST_TOPIC)
-            cls.test_utils.delete_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS,
-                                        topic_name=cls.MULTIPLE_TEST_TOPIC)
+            cls.test_utils.delete_topic(
+                bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.SINGLE_TEST_TOPIC
+            )
+            cls.test_utils.delete_topic(
+                bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.MULTIPLE_TEST_TOPIC
+            )
 
     def setUp(self):
         """ Setup Kafka Producer Client """

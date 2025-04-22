@@ -56,6 +56,13 @@ class KafkaConsumerClient:
         self._consumer = None
         self._running = False
 
+    @property
+    def consumer(self):
+        """
+        Returns the Kafka Consumer object.
+        """
+        return self._consumer
+
     def start(self):
         """
         This method starts the Kafka consumer and connects to the Kafka broker(s) and

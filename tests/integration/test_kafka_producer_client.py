@@ -16,18 +16,29 @@ class TestKafkaProducerClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """ Setup Kafka Topic """
-        if not cls.test_utils.is_kafka_broker_available(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS):
+        if not cls.test_utils.is_kafka_broker_available(
+            bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS
+        ):
             raise unittest.SkipTest("Kafka broker is not available!")
-        cls.test_utils.create_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.SINGLE_TEST_TOPIC)
-        cls.test_utils.create_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.MULTIPLE_TEST_TOPIC)
+        cls.test_utils.create_topic(
+            bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.SINGLE_TEST_TOPIC
+        )
+        cls.test_utils.create_topic(
+            bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.MULTIPLE_TEST_TOPIC
+        )
 
     @classmethod
     def tearDownClass(cls):
         """ Clean up Kafka Topics after running all tests """
-        if cls.test_utils.is_kafka_broker_available(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS):
-            cls.test_utils.delete_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.SINGLE_TEST_TOPIC)
-            cls.test_utils.delete_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS,
-                                        topic_name=cls.MULTIPLE_TEST_TOPIC)
+        if cls.test_utils.is_kafka_broker_available(
+            bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS
+        ):
+            cls.test_utils.delete_topic(
+                bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.SINGLE_TEST_TOPIC
+            )
+            cls.test_utils.delete_topic(
+                bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.MULTIPLE_TEST_TOPIC
+            )
 
     def setUp(self):
         """ Setup Kafka Producer Client """
@@ -120,7 +131,12 @@ class TestKafkaProducerClient(unittest.TestCase):
         test_message = {
             "message": None
         }
-        self.assertIsNotNone(self.producer_client.send_message(self.SINGLE_TEST_TOPIC, test_message))
+        self.assertIsNotNone(
+            self.producer_client.send_message(
+                self.SINGLE_TEST_TOPIC,
+                test_message
+            )
+        )
 
     def test_kafka_producer_client_send_messages_with_invalid_topic_name_with_spaces(self):
         """ Test send message with invalid topic name with spaces """

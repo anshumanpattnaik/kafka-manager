@@ -19,9 +19,13 @@ class TestKafkaManager(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """ Setup Kafka Topic """
-        if not cls.test_utils.is_kafka_broker_available(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS):
+        if not cls.test_utils.is_kafka_broker_available(
+            bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS
+        ):
             raise unittest.SkipTest("Kafka broker is not available!")
-        cls.test_utils.create_topic(bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.TEST_TOPIC)
+        cls.test_utils.create_topic(
+            bootstrap_servers=cls.KAFKA_BOOTSTRAP_SERVERS, topic_name=cls.TEST_TOPIC
+        )
 
     @classmethod
     def tearDownClass(cls):

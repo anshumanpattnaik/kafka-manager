@@ -53,6 +53,13 @@ class KafkaManager:
         """
         return self._admin_client
 
+    @property
+    def consumers(self):
+        """
+        Returns the Kafka consumer.
+        """
+        return self._consumers
+
     def start_producer(self):
         """
         This method starts the Kafka producer client and establishes the connection to the
