@@ -35,10 +35,6 @@ class KafkaProducerClient:
         self._bootstrap_servers = bootstrap_servers
         self._producer = None
 
-    @property
-    def producer(self):
-        return self._producer
-
     def start(self):
         """
         This method starts the Kafka producer and connects to the Kafka broker(s).
