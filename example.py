@@ -3,8 +3,8 @@ import json
 from kafka_manager.kafka_manager import KafkaManager
 
 bootstrap_servers = ['localhost:9092']  # Replace with your Kafka broker addresses
-topic_name = 'example_topic_5'  # Replace topic name with your choice
-group_id = 'example_group_5'  # Replace consumer group ID with your choice
+topic_name = 'example_topic'  # Replace topic name with your choice
+group_id = 'example_group'  # Replace consumer group ID with your choice
 
 
 def message_handler(message):
