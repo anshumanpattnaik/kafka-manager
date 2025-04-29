@@ -9,7 +9,7 @@ class TestKafkaProducerClient(unittest.TestCase):
     SINGLE_TEST_TOPIC = "single_producer_test_topic"
     MULTIPLE_TEST_TOPIC = "multiple_producer_test_topic"
 
-    KAFKA_BOOTSTRAP_SERVERS = ["kafka:9092"]
+    KAFKA_BOOTSTRAP_SERVERS = ["localhost:9092"]
 
     test_utils = TestUtils()
 

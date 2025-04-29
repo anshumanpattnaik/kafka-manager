@@ -10,7 +10,7 @@ from tests.integration.integration_test_utils import TestUtils
 
 
 class TestKafkaManager(unittest.TestCase):
-    KAFKA_BOOTSTRAP_SERVERS = ['kafka:9092']
+    KAFKA_BOOTSTRAP_SERVERS = ['localhost:9092']
     TEST_TOPIC = f'test_manager_topic_{uuid.uuid4().hex[:8]}'
     TEST_GROUP_ID = f'test_manager_group_id_{uuid.uuid4().hex[:8]}'
 
