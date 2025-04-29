@@ -41,6 +41,10 @@ jobs:
         run: |
             sudo apt-get update
             sudo apt-get install -y docker-compose
+      - name: Prune Docker Networks
+        run: docker network prune -f
+      - name: Create Docker Network
+        run: docker network create --driver bridge --subnet=172.20.0.0/24 kafka-net
       - name: Start Kafka Broker
         run: docker-compose up -d
       - name: Wait for Kafka to start
