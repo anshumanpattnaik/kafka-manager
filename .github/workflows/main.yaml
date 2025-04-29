@@ -38,9 +38,9 @@ jobs:
             rm get-docker.sh
             sudo usermod -aG docker $USER
       - name: Set up Docker Compose
-        uses: docker/setup-docker-compose@v2
-        with:
-          version: 'v2'
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y docker-compose
       - name: Start Kafka Broker
         run: docker-compose up -d
       - name: Wait for Kafka to start
