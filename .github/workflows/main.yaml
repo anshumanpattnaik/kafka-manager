@@ -31,30 +31,30 @@ jobs:
         run: |
           flake8 . --count --select=E9,F63,F70,F72,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-line-length=127 --statistics
-#      - name: Install Docker
-#        run: |
-#            curl -fsSL https://get.docker.com -o get-docker.sh
-#            sh get-docker.sh
-#            rm get-docker.sh
-#            sudo usermod -aG docker $USER
-#      - name: Set up Docker Compose
-#        run: |
-#            sudo apt-get update
-#            sudo apt-get install -y docker-compose
-#      - name: Start Kafka Broker
-#        run: docker-compose up -d
-#             echo "Docker Compose started"
-#             docker ps -a
-#             docker inspect kafka-broker
-#      - name: Wait for Kafka to start
-#        run: |
-#          timeout 60 bash -c 'until nc -zv kafka 9092; do echo "Waiting for Kafka..."; sleep 2; done; echo "Kafka is up!"'
+      - name: Install Docker
+        run: |
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+            rm get-docker.sh
+            sudo usermod -aG docker $USER
+      - name: Set up Docker Compose
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y docker-compose
+      - name: Start Kafka Broker
+        run: docker-compose up -d
+             echo "Docker Compose started"
+             docker ps -a
+             docker inspect kafka-broker
+      - name: Wait for Kafka to start
+        run: |
+          timeout 60 bash -c 'until nc -zv kafka 9092; do echo "Waiting for Kafka..."; sleep 2; done; echo "Kafka is up!"'
       - name: Run Unit Tests with pytest
         run: |
           pytest -v ./tests/unit
-#      - name: Run Integration Tests with pytest
-#        run: |
-#          pytest -v ./tests/integration
-#      - name: Tear down Docker Compose
-#        if: always()
-#        run: docker-compose down
+      - name: Run Integration Tests with pytest
+        run: |
+          pytest -v ./tests/integration
+      - name: Tear down Docker Compose
+        if: always()
+        run: docker-compose down
