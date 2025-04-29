@@ -6,7 +6,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.20.0.0/24
+        - subnet: 172.21.0.0/24
 
 services:
   zookeeper:
@@ -20,7 +20,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     networks:
       kafka-net:
-        ipv4_address: 172.20.0.2
+        ipv4_address: 172.21.0.2
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
@@ -47,4 +47,4 @@ services:
       retries: 3
     networks:
       kafka-net:
-        ipv4_address: 172.20.0.3
+        ipv4_address: 172.21.0.3
