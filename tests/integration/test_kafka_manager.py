@@ -99,7 +99,7 @@ class TestKafkaManager(unittest.TestCase):
         is_stop_consuming = False
 
         def process_kafka_message(message):
-            nonlocal received_messages, is_stop_consuming
+            nonlocal is_stop_consuming
             received_messages.append(message.value)
             is_stop_consuming = True
 
