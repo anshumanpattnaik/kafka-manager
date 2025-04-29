@@ -55,6 +55,6 @@ jobs:
 #      - name: Run Integration Tests with pytest
 #        run: |
 #          pytest -v ./tests/integration
-      - name: Tear down Docker Compose
-        if: always()
-        run: docker-compose down
+#      - name: Tear down Docker Compose
+#        if: always()
+#        run: docker-compose down
