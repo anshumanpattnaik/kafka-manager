@@ -31,10 +31,12 @@ jobs:
         run: |
           flake8 . --count --select=E9,F63,F70,F72,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-line-length=127 --statistics
-      - name: Set up Docker
-        uses: docker/setup-docker@v3
-        with:
-          retry: 3
+      - name: Install Docker
+        run: |
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+            rm get-docker.sh
+            sudo usermod -aG docker $USER
       - name: Set up Docker Compose
         uses: docker/setup-docker-compose@v2
         with:
