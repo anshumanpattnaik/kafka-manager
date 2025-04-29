@@ -22,12 +22,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install Cython
         run: pip install Cython
+      - name: Check Cython Version
+        run: |
+          python -c "import Cython; print(Cython.__version__)"
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install flake8 pytest docker-compose
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --no-cache-dir --prefer-binary flake8 pytest docker-compose
           if [ -f requirements.txt ]; then
-            python -m pip install -r requirements.txt
+            python -m pip install --no-cache-dir --prefer-binary -r requirements.txt
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F70,F72,F82 --show-source --statistics
