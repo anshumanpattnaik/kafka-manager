@@ -6,7 +6,7 @@ from kafka.errors import KafkaError
 
 from kafka_manager.kafka_consumer_client import KafkaConsumerClient
 
-MOCK_BOOTSTRAP_SERVERS = 'localhost:9092'
+MOCK_BOOTSTRAP_SERVERS = 'localhost:9000'
 TEST_TOPIC = 'test_topic'
 TEST_GROUP_ID = 'test_group_id'
 VALUE_DESERIALIZER = lambda v: json.loads(v.decode('utf-8')) if v else None

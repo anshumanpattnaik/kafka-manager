@@ -109,3 +109,9 @@ def mock_kafka_producer() -> Generator[Mock, Any, None]:
     """ KafkaProducer fixture """
     with patch(f'{TARGET_KAFKA_PRODUCER}.KafkaProducer') as kafka_producer:
         yield kafka_producer
+
+@pytest.fixture
+def mock_kafka_producer_client() -> Generator[Mock, Any, None]:
+    """ KafkaProducerClient fixture """
+    with patch(f'{TARGET_KAFKA_PRODUCER}.KafkaProducerClient') as kafka_producer_client:
+        yield kafka_producer_client
