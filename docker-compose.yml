@@ -1,5 +1,13 @@
 version: '3.8'
 
+networks:
+  kafka-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24
+
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -10,6 +18,9 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      kafka-net:
+        ipv4_address: 172.20.0.2
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
@@ -28,8 +39,12 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_MESSAGE_MAX_BYTES: "2097152"
+      KAFKA_OPTS: "-Djava.net.preferIPv4Stack=true -Djava.net.preferIPv6Addresses=false"
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "9092" ]
       interval: 5s
       timeout: 3s
       retries: 3
+    networks:
+      kafka-net:
+        ipv4_address: 172.20.0.3
