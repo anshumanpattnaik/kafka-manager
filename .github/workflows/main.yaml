@@ -20,18 +20,30 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Create Virtual Environment
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+      - name: Check Python Version in venv
+        run: python --version
+      - name: Check pip Version in venv
+        run: pip --version
       - name: Install Cython
-        run: | 
+        run: |
+          source .venv/bin/activate
           pip install Cython
-          python -m pip install --upgrade pip setuptools wheel
       - name: Check Cython Version
         run: |
+          source .venv/bin/activate
           python -c "import Cython; print(Cython.__version__)"
       - name: Install Dependencies
         run: |
+          source .venv/bin/activate
+          python -m pip install --upgrade pip setuptools wheel
           python -m pip install --no-cache-dir --prefer-binary flake8 pytest docker-compose
           if [ -f requirements.txt ]; then
             python -m pip install --no-cache-dir --prefer-binary -r requirements.txt
+          fi
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F70,F72,F82 --show-source --statistics
