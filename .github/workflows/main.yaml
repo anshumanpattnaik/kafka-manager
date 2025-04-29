@@ -43,9 +43,6 @@ jobs:
             sudo apt-get install -y docker-compose
       - name: Start Kafka Broker
         run: docker-compose up -d
-             echo "Docker Compose started"
-             docker ps -a
-             docker inspect kafka-broker
       - name: Wait for Kafka to start
         run: |
           timeout 60 bash -c 'until nc -zv kafka 9092; do echo "Waiting for Kafka..."; sleep 2; done; echo "Kafka is up!"'
