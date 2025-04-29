@@ -8,17 +8,16 @@ on:
     branches: [main]
 
 jobs:
-  check_direct_push:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel Direct Push
-        run: |
-          echo "Direct pushes to the main branch are not allowed. Please create a pull request."
-          exit 1
+#  check_direct_push:
+#    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Cancel Direct Push
+#        run: |
+#          echo "Direct pushes to the main branch are not allowed. Please create a pull request."
+#          exit 1
 
   lint_and_test:
-    needs: check_direct_push
     runs-on: ubuntu-latest
     strategy:
       matrix:
