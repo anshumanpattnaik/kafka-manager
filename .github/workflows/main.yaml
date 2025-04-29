@@ -26,49 +26,39 @@ jobs:
           python -m pip install flake8 pytest
           if [ -f requirements.txt ]; then
             python -m pip install -r requirements.txt
+          fi
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F70,F72,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-line-length=127 --statistics
       - name: Install Docker
         run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sh get-docker.sh
-          rm get-docker.sh
-          sudo usermod -aG docker $USER
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+            rm get-docker.sh
+            sudo usermod -aG docker $USER
       - name: Set up Docker Compose
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-      - name: Check Docker Version
-        run: docker --version
-      - name: Check Docker Compose Version
-        run: docker-compose --version
+            sudo apt-get update
+            sudo apt-get install -y docker-compose
       - name: Prune Docker Networks
         run: docker network prune -f
       - name: Create Docker Network
         run: docker network create --driver bridge --subnet=172.21.0.0/24 kafka-net
       - name: Start Kafka Broker
-        run: |
-          docker-compose up -d
-          echo "Docker Compose started"
-          docker ps -a
-          docker inspect kafka-broker # Log container details
+        run: docker-compose up -d
+             echo "Docker Compose started"
+             docker ps -a
+             docker inspect kafka-broker
       - name: Wait for Kafka to start
         run: |
-          timeout 60 bash -c 'until nc -z kafka 9092 || nc -z 172.21.0.3 9092; do echo "Waiting for Kafka..."; sleep 2; done; echo "Kafka is up!"'
+          timeout 60 bash -c 'until nc -zv 172.21.0.3 9092; do echo "Waiting for Kafka..."; sleep 2; done; echo "Kafka is up!"'
       - name: Run Unit Tests with pytest
-        env:
-          KAFKA_CONNECT_TIMEOUT: "20" # Set environment variable for connect timeout
         run: |
           pytest -v ./tests/unit
       - name: Run Integration Tests with pytest
-        env:
-          KAFKA_CONNECT_TIMEOUT: "20" # Set environment variable for connect timeout
         run: |
           pytest -v ./tests/integration
       - name: Tear down Docker Compose
         if: always()
-        run: |
-          docker-compose down
-          echo "Docker Compose stopped"
+        run: docker-compose down
