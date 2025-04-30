@@ -9,7 +9,7 @@ TARGET_KAFKA_MANAGER = 'kafka_manager.kafka_manager'
 TARGET_KAFKA_CONSUMER = 'kafka_manager.kafka_consumer_client'
 TARGET_KAFKA_PRODUCER = 'kafka_manager.kafka_producer_client'
 
-MOCK_BOOTSTRAP_SERVERS = 'localhost:9092'
+MOCK_BOOTSTRAP_SERVERS = 'localhost:9000'
 
 
 @pytest.fixture

@@ -38,20 +38,20 @@ class TestKafkaManager:
         actual_response = kafka_manager.is_producer_running()
         assert actual_response is True
 
-    # def test_create_consumer(self, kafka_consumer_client: Mock, kafka_manager: Mock) -> None:
-    #     """ Test create consumer method """
-    #     topics = ["mock_topic_1"]
-    #     group_id = "mock_group_id"
-    #     auto_offset_reset = "earliest"
-    #
-    #     mock_consumer_instance = kafka_consumer_client.return_value
-    #     consumer = kafka_manager.create_consumer(topics=topics, group_id=group_id,
-    #                                              auto_offset_reset=auto_offset_reset)
-    #
-    #     assert consumer == mock_consumer_instance
-    #     kafka_consumer_client.assert_called_once_with(bootstrap_servers=MOCK_BOOTSTRAP_SERVERS,
-    #                                                   topics=topics, group_id=group_id,
-    #                                                   auto_offset_reset=auto_offset_reset)
+    def test_create_consumer(self, kafka_consumer_client: Mock, kafka_manager: Mock) -> None:
+        """ Test create consumer method """
+        topics = ["mock_topic_1"]
+        group_id = "mock_group_id"
+        auto_offset_reset = "earliest"
+
+        mock_consumer_instance = kafka_consumer_client.return_value
+        consumer = kafka_manager.create_consumer(topics=topics, group_id=group_id,
+                                                 auto_offset_reset=auto_offset_reset)
+
+        assert consumer == mock_consumer_instance
+        kafka_consumer_client.assert_called_once_with(bootstrap_servers=MOCK_BOOTSTRAP_SERVERS,
+                                                      topics=topics, group_id=group_id,
+                                                      auto_offset_reset=auto_offset_reset)
 
     def test_create_consumer_with_kafka_error(self, kafka_consumer_client: Mock,
                                               kafka_manager: Mock) -> None:
@@ -122,13 +122,13 @@ class TestKafkaManager:
         mock_consumer.stop.assert_called_once()
         assert kafka_manager.consumers == {}
 
-    # def test_connect_admin_client(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
-    #     """ Test connect admin client method """
-    #     mock_kafka_admin_client_instance = kafka_admin_client.return_value
-    #     actual_response = kafka_manager.connect_admin_client()
-    #     assert actual_response is True
-    #     assert kafka_manager.admin_client == mock_kafka_admin_client_instance
-    #     kafka_admin_client.assert_called_once_with(bootstrap_servers=MOCK_BOOTSTRAP_SERVERS)
+    def test_connect_admin_client(self, kafka_admin_client: Mock, kafka_manager: Mock) -> None:
+        """ Test connect admin client method """
+        mock_kafka_admin_client_instance = kafka_admin_client.return_value
+        actual_response = kafka_manager.connect_admin_client()
+        assert actual_response is True
+        assert kafka_manager.admin_client == mock_kafka_admin_client_instance
+        kafka_admin_client.assert_called_once_with(bootstrap_servers=MOCK_BOOTSTRAP_SERVERS)
 
     def test_connect_admin_client_with_kafka_error(self, kafka_admin_client: Mock,
                                                    kafka_manager: Mock) -> None:

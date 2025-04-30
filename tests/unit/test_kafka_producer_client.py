@@ -20,12 +20,6 @@ class TestKafkaProducerClient:
         )
         return producer_client
 
-    # def test_kafka_producer_client_start(
-    #     self, kafka_producer_client: Mock
-    # ) -> None:
-    #     """ Test KafkaProducerClient start method """
-    #     assert kafka_producer_client.start() is True
-
     def test_kafka_producer_client_start_already_producer_running(
         self, kafka_producer_client: Mock
     ) -> None:

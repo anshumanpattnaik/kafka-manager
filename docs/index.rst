@@ -18,6 +18,7 @@ documentation for details.
    usage
    api
    installation
+   tests
 
 Indices and tables
 ==================
