@@ -58,51 +58,16 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
-      - name: Check Docker Version
-        run: docker --version
-      - name: Check Docker Compose Version
-        run: docker-compose --version
-      - name: Prune Docker Networks
-        run: docker network prune -f
-      - name: Create Docker Network
-        run: docker network create --driver bridge --subnet=172.21.0.0/24 kafka-net
       - name: Start Kafka Broker
         run: |
           docker-compose up -d
           echo "Docker Compose started"
           docker ps -a
           docker inspect kafka-broker # Log container details
-      - name: Wait for Kafka to be Ready
-        run: |
-          # Wait for the Kafka broker to be ready by listing topics.
-          timeout 60 bash -c '
-            for i in $(seq 1 10); do # Retry loop
-              echo "Attempt \$i: Checking Kafka readiness..."
-              if docker exec kafka-broker kafka-topics.sh --bootstrap-server kafka:9092 --list; then
-                echo "Kafka broker is ready!"
-                break
-              else
-                echo "Kafka broker not ready yet. Sleeping for 5 seconds..."
-                sleep 5
-              fi
-              if [ \$i -eq 10 ]; then
-                echo "Failed to connect to Kafka after 10 attempts."
-                exit 1
-              fi
-            done
-          '
       - name: Run Unit Tests with pytest
-        env:
-          KAFKA_CONNECT_TIMEOUT: "30" # Increased timeout
-          KAFKA_RETRY_BACKOFF_MS: "1000" # Add retry backoff
-          KAFKA_MAX_RETRIES: "3"
         run: |
           pytest -v ./tests/unit
       - name: Run Integration Tests with pytest
-        env:
-          KAFKA_CONNECT_TIMEOUT: "30" # Increased timeout
-          KAFKA_RETRY_BACKOFF_MS: "1000" # Add retry backoff
-          KAFKA_MAX_RETRIES: "3"
         run: |
           pytest -v ./tests/integration
       - name: Tear down Docker Compose
