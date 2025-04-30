@@ -92,4 +92,4 @@ KafkaManager
     if __name__ == "__main__":
         main()
 
-For more detailed examples, refer to the :class:`kafka_manager.KafkaManager` API documentation for more details.
+For more detailed examples, refer to the :class:`~kafka_manager.kafka_manager.KafkaManager` API documentation for more details.
