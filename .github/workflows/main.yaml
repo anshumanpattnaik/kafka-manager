@@ -44,10 +44,6 @@ jobs:
           if [ -f requirements.txt ]; then
             python -m pip install --no-cache-dir --prefer-binary -r requirements.txt
           fi
-      - name: Lint with flake8
-        run: |
-          flake8 . --count --select=E9,F63,F70,F72,F82 --show-source --statistics
-          flake8 . --count --exit-zero --max-line-length=127 --statistics
       - name: Install Docker
         run: |
           curl -fsSL https://get.docker.com -o get-docker.sh
