@@ -22,7 +22,7 @@ Integration Tests
 *****************
 The integration tests that setup and teardown Kafka manager, Kafka Admin, Producer Client & Consumer Client for testing. To run the tests, start the Kafka broker docker container.
 
-Run the following command to start the docker container, and docker-compose resides inside the tests folder.
+Run the following command to start the docker container, and `docker-compose <https://github.com/anshumanpattnaik/kafka-manager/blob/main/tests/docker-compose.yml>`_ resides inside the tests folder.
 
 .. code:: bash
 
