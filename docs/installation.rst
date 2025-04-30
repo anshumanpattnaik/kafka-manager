@@ -9,7 +9,7 @@ The Kafka Manager depends on the `kafka-python <https://github.com/dpkp/kafka-py
 
     pip install kafka-python
 
-The following command will install `kafka-python` package, which provides the necessary functionality for:
+The following command will install `kafka-python <https://kafka-python.readthedocs.io/en/master/index.html>`_ package, which provides the necessary functionality for:
 
 * Connecting to Kafka Brokers.
 * Producing messages to Kafka Topics.
