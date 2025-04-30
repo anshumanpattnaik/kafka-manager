@@ -206,10 +206,10 @@ class KafkaManager:
                 bootstrap_servers=self._bootstrap_servers
             )
             print('Kafka admin client is connected!')
+            return self._admin_client
         except KafkaError as e:
             print(f'Error in connecting to Kafka admin client: {e}')
-            return False
-        return True
+        return False
 
     def create_topic(
         self,

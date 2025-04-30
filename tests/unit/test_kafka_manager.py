@@ -126,7 +126,7 @@ class TestKafkaManager:
         """ Test connect admin client method """
         mock_kafka_admin_client_instance = kafka_admin_client.return_value
         actual_response = kafka_manager.connect_admin_client()
-        assert actual_response is True
+        assert actual_response is mock_kafka_admin_client_instance
         assert kafka_manager.admin_client == mock_kafka_admin_client_instance
         kafka_admin_client.assert_called_once_with(bootstrap_servers=MOCK_BOOTSTRAP_SERVERS)
 
@@ -149,7 +149,7 @@ class TestKafkaManager:
         mock_replication_factor = 1
 
         admin_client_response = kafka_manager.connect_admin_client()
-        assert admin_client_response is True
+        assert admin_client_response is mock_kafka_admin_client_instance
 
         create_topic_response = kafka_manager.create_topic(mock_topic_name, mock_num_partitions,
                                                            mock_replication_factor)
@@ -185,7 +185,7 @@ class TestKafkaManager:
         )
 
         admin_client_response = kafka_manager.connect_admin_client()
-        assert admin_client_response is True
+        assert admin_client_response is mock_kafka_admin_client_instance
 
         mock_topic_name = "test_topic"
         mock_num_partitions = 2
@@ -200,7 +200,7 @@ class TestKafkaManager:
         mock_kafka_admin_client_instance = kafka_admin_client.return_value
 
         admin_client_response = kafka_manager.connect_admin_client()
-        assert admin_client_response is True
+        assert admin_client_response is mock_kafka_admin_client_instance
 
         mock_topic_name = "test_topic"
         delete_topic_response = kafka_manager.delete_topic(mock_topic_name)
@@ -229,7 +229,7 @@ class TestKafkaManager:
         )
 
         admin_client_response = kafka_manager.connect_admin_client()
-        assert admin_client_response is True
+        assert admin_client_response is mock_kafka_admin_client_instance
 
         mock_topic_name = "test_topic"
         delete_topic_response = kafka_manager.delete_topic(mock_topic_name)
