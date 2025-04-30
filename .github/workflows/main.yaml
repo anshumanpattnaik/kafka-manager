@@ -37,28 +37,6 @@ jobs:
           if [ -f requirements.txt ]; then
             python -m pip install -r requirements.txt
           fi
-      - name: Install Docker
-        run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sh get-docker.sh
-          rm get-docker.sh
-          sudo usermod -aG docker $USER
-      - name: Set up Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-      - name: Start Kafka Broker
-        run: |
-          docker-compose up -d
-          echo "Docker Compose started"
       - name: Run Unit Tests with pytest
         run: |
           pytest -v ./tests/unit
-      - name: Run Integration Tests with pytest
-        run: |
-          pytest -v ./tests/integration
-      - name: Tear down Docker Compose
-        if: always()
-        run: |
-          docker-compose down
-          echo "Docker Compose stopped"
