@@ -152,12 +152,7 @@ Resource Management
 *******************
 Kafka Manager resource management ensures that all connections to Kafka are correctly closed. It provides a close() function for proper shutdown, which prevents resource leaks and potential data corruption. It's essential for maintaining data integrity and managing the Kafka cluster and application.
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
+License
+*******
 
-   usage
-   api
-   installation
-   tests
-   license
+MIT License, v1.0. See `LICENSE <https://github.com/anshumanpattnaik/kafka-manager/blob/main/LICENSE>`_.
