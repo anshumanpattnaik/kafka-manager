@@ -65,8 +65,6 @@ It enables configuring various configurations to Create/Manage consumers and pro
 
 .. code:: python
 
-    import json
-
     from kafka_manager.kafka_manager import KafkaManager
 
     bootstrap_servers = ['localhost:9092']  # Replace with your Kafka broker addresses
@@ -106,8 +104,6 @@ Kafka Manager allows developers to create and delete topics dynamically, which s
 
 .. code:: python
 
-    import json
-
     from kafka_manager.kafka_manager import KafkaManager
 
     bootstrap_servers = ['localhost:9092']  # Replace with your Kafka broker addresses
@@ -128,8 +124,6 @@ Admin Client
 It provides interfaces to connect to the Kafka Admin client and allows developers to perform administrative operations such as creating and deleting topics. However, the admin-client connection is vital to performing many advanced Kafka management tasks, such as describing cluster configurations and managing Kafka ACLs.
 
 .. code:: python
-
-    import json
 
     from kafka_manager.kafka_manager import KafkaManager
 
