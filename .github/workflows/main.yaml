@@ -40,7 +40,7 @@ jobs:
         run: |
           source .venv/bin/activate
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --no-cache-dir --prefer-binary flake8 pytest docker-compose
+          python -m pip install --no-cache-dir --prefer-binary flake8 pytest
           if [ -f requirements.txt ]; then
             python -m pip install --no-cache-dir --prefer-binary -r requirements.txt
           fi
