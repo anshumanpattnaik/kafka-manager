@@ -19,6 +19,7 @@ documentation for details.
    api
    installation
    tests
+   license
 
 Indices and tables
 ==================
