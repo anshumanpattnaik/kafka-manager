@@ -155,4 +155,4 @@ Kafka Manager resource management ensures that all connections to Kafka are corr
 License
 *******
 
-MIT License, v1.0. See `LICENSE <https://github.com/anshumanpattnaik/kafka-manager/blob/main/LICENSE>`_.
+MIT License, See `LICENSE <https://github.com/anshumanpattnaik/kafka-manager/blob/main/LICENSE>`_.
