@@ -20,25 +20,18 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Create Virtual Environment
-        run: |
-          python -m venv .venv
-          source .venv/bin/activate
       - name: Check Python Version in venv
         run: python --version
       - name: Check pip Version in venv
         run: pip --version
       - name: Install Cython
         run: |
-          source .venv/bin/activate
           pip install Cython
       - name: Check Cython Version
         run: |
-          source .venv/bin/activate
           python -c "import Cython; print(Cython.__version__)"
       - name: Install Dependencies
         run: |
-          source .venv/bin/activate
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install pytest
           if [ -f requirements.txt ]; then
@@ -58,8 +51,6 @@ jobs:
         run: |
           docker-compose up -d
           echo "Docker Compose started"
-          docker ps -a
-          docker inspect kafka-broker # Log container details
       - name: Run Unit Tests with pytest
         run: |
           pytest -v ./tests/unit
