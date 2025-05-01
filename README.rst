@@ -21,7 +21,7 @@ Installation
 ------------
 .. code:: bash
 
-    pip install kafka-manager
+    $ pip install kafka-manager
 
 Features
 --------
