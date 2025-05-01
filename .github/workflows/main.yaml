@@ -34,3 +34,7 @@ jobs:
       - name: Run Unit Tests with pytest
         run: |
           pytest -v ./tests/unit
+      - name: Run tests with coverage
+        run: coverage run -m pytest
+      - name: Generate coverage report
+        run: coverage xml
