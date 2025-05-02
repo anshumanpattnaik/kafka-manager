@@ -4,6 +4,9 @@ kafka-manager
 .. image:: https://img.shields.io/badge/license-MIT-blue
     :target: https://github.com/anshumanpattnaik/kafka-manager/blob/main/LICENSE
 
+.. image:: https://codecov.io/gh/anshumanpattnaik/kafka-manager/graph/badge.svg?token=8DES91MFEU
+    :target: https://codecov.io/gh/anshumanpattnaik/kafka-manager
+
 A Kafka Manager is a Python utility class that simplifies Kafka interactions by providing a high-level abstraction for
 managing Producers, Consumers, and Topics. It provides a user-friendly interface for developers to implement Kafka
 effectively in their applications, encapsulating the complexity of the Kafka-python library. This abstraction allows
