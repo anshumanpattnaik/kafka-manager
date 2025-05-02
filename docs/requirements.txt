@@ -1,0 +1,5 @@
+kafka-python==2.1.4
+setuptools==78.1.0
+Sphinx
+sphinx-rtd-theme
+twine
