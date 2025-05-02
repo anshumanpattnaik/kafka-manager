@@ -12,6 +12,8 @@ managing Producers, Consumers, and Topics. It provides a user-friendly interface
 effectively in their applications, encapsulating the complexity of the Kafka-python library. This abstraction allows
 quicker development and more manageable maintenance of Kafka-related applications.
 
+Read the documentation for more details: https://kafka-manager-docs.readthedocs.io/en/latest/index.html
+
 Requirements
 ------------
 * Python 3.7+
