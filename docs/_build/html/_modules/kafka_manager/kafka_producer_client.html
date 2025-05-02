@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kafka_manager.kafka_producer_client &mdash; Kafka Manager 0.0.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=47de8214"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Kafka Manager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">kafka-manager API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tests.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Kafka Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kafka_manager.kafka_producer_client</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kafka_manager.kafka_producer_client</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">KafkaProducerClient Module</span>
+
+<span class="sd">The Kafka Producer Client module encapsulates Kafka Producer API from the `kafka-python` library.</span>
+<span class="sd">It provides many functionalities for start, stop, flush, and send messages to Kafka topics.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaProducer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaError</span>
+
+
+<div class="viewcode-block" id="KafkaProducerClient">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_producer_client.KafkaProducerClient">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KafkaProducerClient</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for managing the lifecycle of a Kafka producer, which encapsulates the connection</span>
+<span class="sd">    and disconnection logic, allows managing and reusing the producer within an application.</span>
+<span class="sd">    To send messages, it serializes the message value to JSON format, which gives an advantage</span>
+<span class="sd">    to read once deserialized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">bootstrap_servers</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Kafka producer client and establishes configurations for connecting</span>
+<span class="sd">        to the Kafka broker(s).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bootstrap_servers (list):</span>
+<span class="sd">                    A list of Kafka broker addresses (e.g., [&#39;localhost:9092&#39;,</span>
+<span class="sd">                    &#39;kafka-broker-1:9092&#39;]) These addresses are used to establish the initial</span>
+<span class="sd">                    connection to the Kafka cluster.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap_servers</span> <span class="o">=</span> <span class="n">bootstrap_servers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="KafkaProducerClient.start">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_producer_client.KafkaProducerClient.start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method starts the Kafka producer and connects to the Kafka broker(s).</span>
+<span class="sd">        And configures the `KafkaProducer` instance, which handles the initial connection</span>
+<span class="sd">        to Kafka broker(s) specified in `bootstrap_servers.`</span>
+
+<span class="sd">        To serialize the message values to JSON, the producer configured with UTF-8 encoding</span>
+<span class="sd">        standard.</span>
+
+<span class="sd">        :return: It returns True if the producer started and connected successfully else</span>
+<span class="sd">            False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Kafka producer already started!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span>
+                <span class="n">bootstrap_servers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap_servers</span><span class="p">,</span>
+                <span class="n">value_serializer</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka producer started and connected.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in starting the Kafka producer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="KafkaProducerClient.send_message">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_producer_client.KafkaProducerClient.send_message">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_message</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method sends the serialized JSON value to the Kafka topic with the given topic</span>
+<span class="sd">        name using the configured Kafka producer.</span>
+
+<span class="sd">        :param topic: The topic name to send the message to.</span>
+<span class="sd">        :param value: The serialized JSON value to send to the topic.</span>
+<span class="sd">        :return: If the sending was successful, it returns metadata about the delivered message.</span>
+<span class="sd">            Otherwise, it returns None if the producer is not running or an error occurred during</span>
+<span class="sd">            sending.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka producer is not running!&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;At least one value must be specified!&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">topic</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in sending the message: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="KafkaProducerClient.flush">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_producer_client.KafkaProducerClient.flush">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method flushes the producer and ensures all buffered messages are sent successfully.</span>
+<span class="sd">        It forces the producer to send buffered messages that have not yet been transmitted to the</span>
+<span class="sd">        Kafka brokers and blocks until all outstanding messages have been successfully sent or</span>
+<span class="sd">        timeout is reached.</span>
+
+<span class="sd">        To prevent data loss, calling the flush method is essential before stopping or closing</span>
+<span class="sd">        the Kafka producer. As per the lifecycle, If the producer is terminated before all</span>
+<span class="sd">        messages are flushed, there is a higher possibility that some messages may not be</span>
+<span class="sd">        delivered to Kafka.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            This method does not return a value. It only performs an action to flush the produce</span>
+<span class="sd">            rather than returning a result.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            If an exception occurs during the flushing process due to network issues, broker</span>
+<span class="sd">            unavailability, or any other problem preventing the producer from sending messages</span>
+<span class="sd">            to the brokers, an exception is raised to handle this scenario, and the caller</span>
+<span class="sd">            should be prepared to handle this exception on the client side.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">KafkaError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Failed to flush producer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KafkaProducerClient.stop">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_producer_client.KafkaProducerClient.stop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method gracefully closes the Kafka producer connection. It&#39;s essential to call this</span>
+<span class="sd">        method once the Kafka producer processes all pending messages and resources are released.</span>
+
+<span class="sd">        :return: If the Kafka producer was stopped successfully or already stopped, it returns True.</span>
+<span class="sd">            Otherwise, if an error occurs while stopping the Kafka producer, it returns False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka producer stopped and connection is closed.&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in stopping the Kafka producer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="KafkaProducerClient.is_producer_running">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_producer_client.KafkaProducerClient.is_producer_running">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_producer_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method checks if the Kafka producer is running.</span>
+
+<span class="sd">        :return: If the Kafka producer has been running and connected, it returns True. Otherwise,</span>
+<span class="sd">            it returns False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Anshuman Pattnaik.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
