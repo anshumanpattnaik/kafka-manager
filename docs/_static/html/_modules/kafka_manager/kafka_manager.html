@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kafka_manager.kafka_manager &mdash; Kafka Manager 0.0.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=47de8214"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Kafka Manager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">kafka-manager API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tests.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Kafka Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kafka_manager.kafka_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kafka_manager.kafka_manager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Kafka Manager Module</span>
+
+<span class="sd">The Kafka Manager module provides a high-level abstraction over the `kafka-python` library to</span>
+<span class="sd">simplify interaction with Apache Kafka. It offers many functionalities to manage Kafka Producers,</span>
+<span class="sd">Consumers, Topics, and Admin Client operations, encapsulating the complexity behind</span>
+<span class="sd">`kafka-python` usage.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka.admin</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewTopic</span><span class="p">,</span> <span class="n">KafkaAdminClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaError</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka_manager.kafka_consumer_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaConsumerClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka_manager.kafka_producer_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaProducerClient</span>
+
+
+<div class="viewcode-block" id="KafkaManager">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KafkaManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A utility class to manage Kafka producers, consumers, and topics. It provides a higher level of</span>
+<span class="sd">    abstraction for interacting with Kafka, encapsulating and defining methods to manage producers</span>
+<span class="sd">    and consumers, and allowing administrative operations like topic creation, deletion, etc. It</span>
+<span class="sd">    leverages the `KafkaProducerClient` and `KafkaConsumerClient` classes for lifecycle management</span>
+<span class="sd">    to access and invoke the methods of producers and consumers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">bootstrap_servers</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Kafka manager, establishes configurations for connecting to the</span>
+<span class="sd">        Kafka broker(s) and instantiates `KafkaProducerClient` and initializes admin client.</span>
+
+<span class="sd">        :param bootstrap_servers:</span>
+<span class="sd">            A list of Kafka broker addresses (e.g., [&#39;localhost:9092&#39;, &#39;kafka-broker-1:9092&#39;])</span>
+<span class="sd">            These addresses are used to establish the initial connection to the Kafka cluster.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap_servers</span> <span class="o">=</span> <span class="n">bootstrap_servers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer_client</span> <span class="o">=</span> <span class="n">KafkaProducerClient</span><span class="p">(</span><span class="n">bootstrap_servers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap_servers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">producer_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Kafka producer client.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer_client</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">admin_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Kafka admin client.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">consumers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Kafka consumer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span>
+
+<div class="viewcode-block" id="KafkaManager.start_producer">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.start_producer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method starts the Kafka producer client and establishes the connection to the</span>
+<span class="sd">        Kafka broker(s), which this instance manages.</span>
+
+<span class="sd">        :return: It returns True if the Kafka producer started successfully else it returns False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer_client</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.send_message">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.send_message">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_message</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">topic</span><span class="p">,</span>
+        <span class="n">value</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method sends message to the specified Kafka topic by using the managed</span>
+<span class="sd">        Kafka producer client.</span>
+
+<span class="sd">        :param topic: The name of the Kafka topic send the message to.</span>
+<span class="sd">        :param value: The serialized message JSON payload.</span>
+<span class="sd">        :return: If the sent message was successful, it returns Metadata; otherwise, it returns</span>
+<span class="sd">                None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer_client</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.stop_producer">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.stop_producer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method will stop the managed Kafka producer client.</span>
+
+<span class="sd">        :return: It returns True if the Kafka producer stopped successfully else it returns False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer_client</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.is_producer_running">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.is_producer_running">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_producer_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method checks if the managed Kafka producer client is running.</span>
+
+<span class="sd">        :return: It returns True if the managed Kafka producer client is running and False</span>
+<span class="sd">                otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer_client</span><span class="o">.</span><span class="n">is_producer_running</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.create_consumer">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.create_consumer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_consumer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">topics</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">group_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">auto_offset_reset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;latest&#39;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method creates a new `KafkaConsumerClient` instance with the given configuration,</span>
+<span class="sd">        establishes the connection to the Kafka broker(s), and stores the specific consumer&#39;s</span>
+<span class="sd">        configuration in the `consumers` dictionary with the group_id key.</span>
+
+<span class="sd">        :param topics: A list of Kafka topics to subscribe to.</span>
+<span class="sd">        :param group_id: A consumer group_id and defaults to None.</span>
+<span class="sd">        :param auto_offset_reset:</span>
+<span class="sd">                An optional parameter to sort the message ordering, which is set by default to</span>
+<span class="sd">                &#39;latest&#39; when the initial offset in Kafka does not exist.</span>
+<span class="sd">                    - &#39;earliest&#39;: Automatically sorts messages earlier than the initial offset.</span>
+<span class="sd">                    - &#39;latest&#39;: Automatically sorts messages later than the initial offset.</span>
+<span class="sd">        :param kwargs: Additional arguments are passed directly to the Kafka Consumer constructor,</span>
+<span class="sd">                which allows further customization of the consumer (e.g., Security Settings, etc.).</span>
+<span class="sd">        :return: It returns the new `KafkaConsumerClient` instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">consumer_client</span> <span class="o">=</span> <span class="n">KafkaConsumerClient</span><span class="p">(</span><span class="n">bootstrap_servers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap_servers</span><span class="p">,</span>
+                                                  <span class="n">topics</span><span class="o">=</span><span class="n">topics</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span>
+                                                  <span class="n">auto_offset_reset</span><span class="o">=</span><span class="n">auto_offset_reset</span><span class="p">,</span>
+                                                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span><span class="p">[</span><span class="n">group_id</span> <span class="k">if</span> <span class="n">group_id</span> <span class="k">else</span>
+            <span class="sa">f</span><span class="s2">&quot;default_consumer_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">consumer_client</span>
+            <span class="k">return</span> <span class="n">consumer_client</span>
+        <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in creating consumer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.start_consumer">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.start_consumer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_consumer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">consumer_id</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method starts a specific `KafkaConsumerClient` instance of the given `consumer_id`.</span>
+
+<span class="sd">        :param consumer_id: An ID of the consumer client to start.</span>
+<span class="sd">        :return: It returns True if the consumer started successfully else, it returns False if the</span>
+<span class="sd">                consumer ID is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">consumer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span><span class="p">[</span><span class="n">consumer_id</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Consumer with ID </span><span class="si">{</span><span class="n">consumer_id</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.consume_messages">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.consume_messages">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">consume_messages</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">consumer_id</span><span class="p">,</span>
+        <span class="n">message_handler</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method consumes messages from the given `consumer_id` of a specific consumer.</span>
+
+<span class="sd">        :param consumer_id: An ID of the consumer client to start consuming messages from.</span>
+<span class="sd">        :param message_handler: A function to call when a message is received.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">consumer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span><span class="p">[</span><span class="n">consumer_id</span><span class="p">]</span><span class="o">.</span><span class="n">consume</span><span class="p">(</span><span class="n">message_handler</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Consumer with ID </span><span class="si">{</span><span class="n">consumer_id</span><span class="si">}</span><span class="s1"> not found.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.stop_consumer">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.stop_consumer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_consumer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">consumer_id</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method stops a specific `KafkaConsumerClient` instance of the given `consumer_id`.</span>
+
+<span class="sd">        :param consumer_id: An ID of the consumer client to stop consuming messages from.</span>
+<span class="sd">        :return: It returns True if the consumer stopped successfully else, it returns False if the</span>
+<span class="sd">                consumer ID is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">consumer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span><span class="p">[</span><span class="n">consumer_id</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Consumer with ID </span><span class="si">{</span><span class="n">consumer_id</span><span class="si">}</span><span class="s1"> not found.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.stop_all_consumers">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.stop_all_consumers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_all_consumers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method stops all `KafkaConsumerClient` instances.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">consumer_client</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">consumer_client</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumers</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.connect_admin_client">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.connect_admin_client">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect_admin_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method connects to the Kafka admin client, establishes a connection to the</span>
+<span class="sd">        Kafka broker(s), and performs administrative operations on the Kafka cluster.</span>
+
+<span class="sd">        :return: It returns True if the connection to the Kafka admin client was successful; else,</span>
+<span class="sd">            it returns False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span> <span class="o">=</span> <span class="n">KafkaAdminClient</span><span class="p">(</span>
+                <span class="n">bootstrap_servers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap_servers</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka admin client is connected!&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span>
+        <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in connecting to Kafka admin client: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.create_topic">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.create_topic">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_topic</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">topic_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_partitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">replication_factor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method creates a new topic with the given `topic_name` and it&#39;s an administrative</span>
+<span class="sd">        operation, it can only be created by the admin client.</span>
+
+<span class="sd">        :param topic_name: Name of the new topic.</span>
+<span class="sd">        :param num_partitions: Number of partitions of the new topic. Defaults to 1.</span>
+<span class="sd">        :param replication_factor: Replication factor of the new topic. Defaults to 1.</span>
+<span class="sd">        :return: It returns True if the topic was created successfully; else it returns False</span>
+<span class="sd">            otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka admin client is not connected.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">topic_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">NewTopic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">topic_name</span><span class="p">,</span> <span class="n">num_partitions</span><span class="o">=</span><span class="n">num_partitions</span><span class="p">,</span>
+                                   <span class="n">replication_factor</span><span class="o">=</span><span class="n">replication_factor</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span><span class="o">.</span><span class="n">create_topics</span><span class="p">(</span><span class="n">new_topics</span><span class="o">=</span><span class="n">topic_list</span><span class="p">,</span> <span class="n">validate_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Kafka topic </span><span class="si">{</span><span class="n">topic_name</span><span class="si">}</span><span class="s1"> created with </span><span class="si">{</span><span class="n">num_partitions</span><span class="si">}</span><span class="s1"> partitions and &#39;</span>
+                  <span class="sa">f</span><span class="s1">&#39;replication factor </span><span class="si">{</span><span class="n">replication_factor</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in creating Kafka topic: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.delete_topic">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.delete_topic">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_topic</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">topic_name</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method deletes a topic with the given `topic_name` and it&#39;s an administrative</span>
+<span class="sd">        operation, it can only be deleted by the admin client.</span>
+
+<span class="sd">        :param topic_name: Name of the new topic.</span>
+<span class="sd">        :return: It returns True if the topic was deleted successfully; else it returns False</span>
+<span class="sd">            otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka admin client is not connected.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span><span class="o">.</span><span class="n">delete_topics</span><span class="p">(</span><span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="n">topic_name</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Kafka topic </span><span class="si">{</span><span class="n">topic_name</span><span class="si">}</span><span class="s1"> deleted.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in deleting Kafka topic: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.close_admin_client">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.close_admin_client">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close_admin_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method closes the Kafka admin client connection.</span>
+
+<span class="sd">        :return: It returns True if the Kafka admin client was closed successfully; else it returns</span>
+<span class="sd">            False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_admin_client</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka admin client connection is closed.&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in closing Kafka admin client: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="KafkaManager.close">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_manager.KafkaManager.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method closes all the Kafka connections (producers, consumers, and admin clients).</span>
+<span class="sd">        It&#39;s essential to call this method to ensure that all producers, consumers, and admin</span>
+<span class="sd">        clients are stopped properly and resources are released.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_producer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_all_consumers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close_admin_client</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Anshuman Pattnaik.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kafka-manager &mdash; Kafka Manager 0.0.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=47de8214"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage Overview" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Kafka Manager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">kafka-manager API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Kafka Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">kafka-manager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="kafka-manager">
+<h1>kafka-manager<a class="headerlink" href="#kafka-manager" title="Link to this heading"></a></h1>
+<a class="reference external image-reference" href="https://github.com/anshumanpattnaik/kafka-manager/blob/main/LICENSE"><img alt="https://img.shields.io/badge/license-MIT-blue" src="https://img.shields.io/badge/license-MIT-blue" />
+</a>
+<p>A Kafka Manager is a Python utility class that simplifies Kafka interactions by providing a high-level abstraction for
+managing Producers, Consumers, and Topics. It provides a user-friendly interface for developers to implement Kafka
+effectively in their applications, encapsulating the complexity of the Kafka-python library. This abstraction allows
+quicker development and more manageable maintenance of Kafka-related applications.</p>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.7+</p></li>
+<li><p>kafka-python</p></li>
+</ul>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kafka-manager
+</pre></div>
+</div>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<section id="producer-management">
+<h3>Producer Management<a class="headerlink" href="#producer-management" title="Link to this heading"></a></h3>
+<p>It provides interfaces to start/stop producers, send messages to topics, and check producer running status. It also invokes functions to initialize and terminate producer instances to publish messages to Kafka, and it effectively checks the producer status to ensure that messages are sent successfully.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka_manager.kafka_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaManager</span>
+
+<span class="n">bootstrap_servers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;localhost:9092&#39;</span><span class="p">]</span>  <span class="c1"># Replace with your Kafka broker addresses</span>
+<span class="n">topic_name</span> <span class="o">=</span> <span class="s1">&#39;example_topic&#39;</span>  <span class="c1"># Replace topic name with your choice</span>
+<span class="n">group_id</span> <span class="o">=</span> <span class="s1">&#39;example_group&#39;</span>  <span class="c1"># Replace consumer group ID with your choice</span>
+
+<span class="c1"># Create a KafkaManager instance</span>
+<span class="n">kafka_manager</span> <span class="o">=</span> <span class="n">KafkaManager</span><span class="p">(</span><span class="n">bootstrap_servers</span><span class="o">=</span><span class="n">bootstrap_servers</span><span class="p">)</span>
+
+<span class="c1"># Start the Kafka producer</span>
+<span class="n">kafka_manager</span><span class="o">.</span><span class="n">start_producer</span><span class="p">();</span>
+
+<span class="c1"># Send Kafka message</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">message_payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+        <span class="s2">&quot;message_key&quot;</span><span class="p">:</span> <span class="s2">&quot;message_value&quot;</span>
+    <span class="p">})</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">kafka_manager</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="n">topic_name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">message_payload</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Message sent successfully to Kafka topic: &quot;</span><span class="si">{</span><span class="n">topic_name</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Failed to send message to Kafka topic: &quot;</span><span class="si">{</span><span class="n">topic_name</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in sending message to Kafka topic: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Stop Kafka producer</span>
+<span class="n">kafka_manager</span><span class="o">.</span><span class="n">stop_producer</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="consumer-management">
+<h3>Consumer Management<a class="headerlink" href="#consumer-management" title="Link to this heading"></a></h3>
+<p>It enables configuring various configurations to Create/Manage consumers and provides an interface to start/stop consumers. The Kafka Manager allows developers to create consumers per their application needs, such as different deserialization methods or offset management strategies. It provides a user-defined callback function to consume messages, allowing developers to define custom logic for processing each received message and enabling further data processing.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka_manager.kafka_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaManager</span>
+
+<span class="n">bootstrap_servers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;localhost:9092&#39;</span><span class="p">]</span>  <span class="c1"># Replace with your Kafka broker addresses</span>
+<span class="n">topic_name</span> <span class="o">=</span> <span class="s1">&#39;example_topic&#39;</span>  <span class="c1"># Replace topic name with your choice</span>
+<span class="n">group_id</span> <span class="o">=</span> <span class="s1">&#39;example_group&#39;</span>  <span class="c1"># Replace consumer group ID with your choice</span>
+
+<span class="c1"># Create a KafkaManager instance</span>
+<span class="n">kafka_manager</span> <span class="o">=</span> <span class="n">KafkaManager</span><span class="p">(</span><span class="n">bootstrap_servers</span><span class="o">=</span><span class="n">bootstrap_servers</span><span class="p">)</span>
+
+<span class="c1"># Create a Kafka Consumer</span>
+<span class="n">consumer</span> <span class="o">=</span> <span class="n">kafka_manager</span><span class="o">.</span><span class="n">create_consumer</span><span class="p">(</span><span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="n">topic_name</span><span class="p">],</span> <span class="n">group_id</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">auto_offset_reset</span><span class="o">=</span><span class="s1">&#39;earliest&#39;</span><span class="p">)</span>
+
+<span class="c1"># Start the Kafka Consumer</span>
+<span class="n">kafka_manager</span><span class="o">.</span><span class="n">start_consumer</span><span class="p">(</span><span class="n">consumer_id</span><span class="o">=</span><span class="n">group_id</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">message_handler</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method is a callback function called by the consumer, which handles the received messages when a new message</span>
+<span class="sd">    arrives.</span>
+
+<span class="sd">    In production real-world application, the received message would be processed as follows:</span>
+<span class="sd">    - Perform some business logic</span>
+<span class="sd">    - Store the message in a database for further processing.</span>
+<span class="sd">    - Message deserialization</span>
+<span class="sd">    - etc.</span>
+
+<span class="sd">    :param message: Message received from the consumer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Received message: Partition=</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">partition</span><span class="si">}</span><span class="s1">, Offset=</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">offset</span><span class="si">}</span><span class="s1">, Value=</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Consume Messages</span>
+<span class="n">kafka_manager</span><span class="o">.</span><span class="n">consume_messages</span><span class="p">(</span><span class="n">consumer_id</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">message_handler</span><span class="o">=</span><span class="n">message_handler</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="topic-management">
+<h3>Topic Management<a class="headerlink" href="#topic-management" title="Link to this heading"></a></h3>
+<p>Kafka Manager allows developers to create and delete topics dynamically, which serve as categories from which messages are published. It’s essential for managing data streams and evolving application requirements.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka_manager.kafka_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaManager</span>
+
+<span class="n">bootstrap_servers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;localhost:9092&#39;</span><span class="p">]</span>  <span class="c1"># Replace with your Kafka broker addresses</span>
+<span class="n">topic_name</span> <span class="o">=</span> <span class="s1">&#39;example_topic&#39;</span>  <span class="c1"># Replace topic name with your choice</span>
+<span class="n">group_id</span> <span class="o">=</span> <span class="s1">&#39;example_group&#39;</span>  <span class="c1"># Replace consumer group ID with your choice</span>
+
+<span class="c1"># Create a KafkaManager instance</span>
+<span class="n">kafka_manager</span> <span class="o">=</span> <span class="n">KafkaManager</span><span class="p">(</span><span class="n">bootstrap_servers</span><span class="o">=</span><span class="n">bootstrap_servers</span><span class="p">)</span>
+
+<span class="c1"># For topic management connect to Kafka admin client</span>
+<span class="n">kafka_manager</span><span class="o">.</span><span class="n">connect_admin_client</span><span class="p">()</span>
+
+<span class="c1"># Create a topic - (if it doesn&#39;t exist)</span>
+<span class="n">kafka_manager</span><span class="o">.</span><span class="n">create_topic</span><span class="p">(</span><span class="n">topic_name</span><span class="o">=</span><span class="n">topic_name</span><span class="p">,</span> <span class="n">num_partitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">replication_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="admin-client">
+<h3>Admin Client<a class="headerlink" href="#admin-client" title="Link to this heading"></a></h3>
+<p>It provides interfaces to connect to the Kafka Admin client and allows developers to perform administrative operations such as creating and deleting topics. However, the admin-client connection is vital to performing many advanced Kafka management tasks, such as describing cluster configurations and managing Kafka ACLs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka_manager.kafka_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaManager</span>
+
+<span class="n">bootstrap_servers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;localhost:9092&#39;</span><span class="p">]</span>  <span class="c1"># Replace with your Kafka broker addresses</span>
+<span class="n">topic_name</span> <span class="o">=</span> <span class="s1">&#39;example_topic&#39;</span>  <span class="c1"># Replace topic name with your choice</span>
+<span class="n">group_id</span> <span class="o">=</span> <span class="s1">&#39;example_group&#39;</span>  <span class="c1"># Replace consumer group ID with your choice</span>
+
+<span class="c1"># Create a KafkaManager instance</span>
+<span class="n">kafka_manager</span> <span class="o">=</span> <span class="n">KafkaManager</span><span class="p">(</span><span class="n">bootstrap_servers</span><span class="o">=</span><span class="n">bootstrap_servers</span><span class="p">)</span>
+
+<span class="c1"># Connect to Kafka admin client</span>
+<span class="n">admin_client</span> <span class="o">=</span> <span class="n">kafka_manager</span><span class="o">.</span><span class="n">connect_admin_client</span><span class="p">()</span>
+
+<span class="c1"># Listing Consumer Groups</span>
+<span class="n">consumers_groups</span> <span class="o">=</span> <span class="n">admin_client</span><span class="o">.</span><span class="n">list_consumer_groups</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">consumers_groups</span><span class="p">)</span>
+
+<span class="c1"># Describing Consumer Groups</span>
+<span class="n">admin_client</span><span class="o">.</span><span class="n">describe_consumer_groups</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">consumers_groups</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="error-handling">
+<h3>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h3>
+<p>To handle errors in Kafka due to network failures, broker failures, or misconfigurations, Kafka Manager handles these exceptions efficiently and ensures application stability.</p>
+</section>
+<section id="resource-management">
+<h3>Resource Management<a class="headerlink" href="#resource-management" title="Link to this heading"></a></h3>
+<p>Kafka Manager resource management ensures that all connections to Kafka are correctly closed. It provides a close() function for proper shutdown, which prevents resource leaks and potential data corruption. It’s essential for maintaining data integrity and managing the Kafka cluster and application.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Anshuman Pattnaik.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

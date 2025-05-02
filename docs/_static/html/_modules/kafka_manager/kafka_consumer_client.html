@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kafka_manager.kafka_consumer_client &mdash; Kafka Manager 0.0.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=47de8214"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Kafka Manager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">kafka-manager API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tests.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Kafka Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kafka_manager.kafka_consumer_client</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kafka_manager.kafka_consumer_client</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">KafkaConsumerClient Module</span>
+
+<span class="sd">The Kafka Consumer Client module encapsulates Kafka Consumer API from the `kafka-python` library.</span>
+<span class="sd">It provides many functionalities to create, start, stop, and consume messages from Kafka topics.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka.consumer</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaConsumer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaError</span>
+
+
+<div class="viewcode-block" id="KafkaConsumerClient">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_consumer_client.KafkaConsumerClient">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KafkaConsumerClient</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for managing the lifecycle of a Kafka consumer, which encapsulates the connection</span>
+<span class="sd">    and disconnection logic, allows managing and consuming messages from a Kafka consumer</span>
+<span class="sd">    within an application. It implements a deserialization technique to decode the message</span>
+<span class="sd">    value from JSON to read the content and handles errors in each process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">bootstrap_servers</span><span class="p">,</span>
+        <span class="n">topics</span><span class="p">,</span>
+        <span class="n">group_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">auto_offset_reset</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Kafka consumer client, establishes configurations for connecting to the</span>
+<span class="sd">        Kafka broker(s), and subscribes to the topic(s).</span>
+
+<span class="sd">        :param bootstrap_servers:</span>
+<span class="sd">                A list of Kafka broker addresses (e.g., [&#39;localhost:9092&#39;, &#39;kafka-broker-1:9092&#39;])</span>
+<span class="sd">                These addresses are used to establish the initial connection to the Kafka cluster.</span>
+<span class="sd">        :param topics: A list of Kafka topics to subscribe to (e.g., [&#39;test_topic1&#39;, &#39;test_topic2])</span>
+<span class="sd">        :param group_id:</span>
+<span class="sd">                A group ID is used to identify the consumer group (optional). Messages with the same</span>
+<span class="sd">                group ID of Consumers will work together from the topics.</span>
+<span class="sd">        :param auto_offset_reset:</span>
+<span class="sd">                An optional parameter to sort the message ordering, which is set by default</span>
+<span class="sd">                to &#39;latest&#39; when the initial offset in Kafka does not exist.</span>
+<span class="sd">                - &#39;earliest&#39;: Automatically sorts messages earlier than the initial offset.</span>
+<span class="sd">                - &#39;latest&#39;: Automatically sorts messages later than the initial offset.</span>
+<span class="sd">        :param kwargs:</span>
+<span class="sd">                Additional arguments are passed directly to the Kafka Consumer constructor,</span>
+<span class="sd">                which allows further customization of the consumer (e.g., Security Settings, etc.).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap_servers</span> <span class="o">=</span> <span class="n">bootstrap_servers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_topics</span> <span class="o">=</span> <span class="n">topics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_group_id</span> <span class="o">=</span> <span class="n">group_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_auto_offset_reset</span> <span class="o">=</span> <span class="n">auto_offset_reset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the Kafka Consumer object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span>
+
+<div class="viewcode-block" id="KafkaConsumerClient.start">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_consumer_client.KafkaConsumerClient.start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method starts the Kafka consumer and connects to the Kafka broker(s) and</span>
+<span class="sd">        subscribes to the specified topic(s). And configures the `KafkaConsumer` instance,</span>
+<span class="sd">        which handles consuming messages from a Kafka topic.</span>
+
+<span class="sd">        The consumer is configured to deserialize the message from (UTF-8) encoded JSON.</span>
+
+<span class="sd">        :return: It returns True if the consumer starts and connects successfully or returns False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka consumer is already running!&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span>
+                <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_topics</span><span class="p">,</span>
+                <span class="n">bootstrap_servers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap_servers</span><span class="p">,</span>
+                <span class="n">group_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_group_id</span><span class="p">,</span>
+                <span class="n">auto_offset_reset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_auto_offset_reset</span><span class="p">,</span>
+                <span class="n">value_deserializer</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span> <span class="k">if</span> <span class="n">v</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_consumer_kwargs</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Kafka consumer is started and subscribed to topics: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_topics</span><span class="si">}</span><span class="s1"> and &#39;</span>
+                  <span class="sa">f</span><span class="s1">&#39;group_id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_group_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error starting Kafka consumer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="KafkaConsumerClient.consume">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_consumer_client.KafkaConsumerClient.consume">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">consume</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">message_handler</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method continuously enters a loop to poll for new messages from the Kafka topic</span>
+<span class="sd">        and calls each received message the `message_handler` function, passing the message</span>
+<span class="sd">        object as an argument. This technique is implemented to process the messages efficiently,</span>
+<span class="sd">        and it continues to consume messages until the `stop()` method is called, or any</span>
+<span class="sd">        discrepancy or exception occurs.</span>
+
+<span class="sd">        :param message_handler:</span>
+<span class="sd">                When each message is received, a method that takes a `KafkaConsumer` message</span>
+<span class="sd">                object as an argument will be called. The message object contains attributes</span>
+<span class="sd">                like `topic,` `partition,` `offset,` `key,` and `value.`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka consumer is not running!&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_topics</span><span class="p">)</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+                <span class="n">records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout_ms</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">records</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">consumer_list</span> <span class="ow">in</span> <span class="n">records</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">consumer_list</span><span class="p">:</span>
+                            <span class="n">message_handler</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Received message: Partition=</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">partition</span><span class="si">}</span><span class="s1">, &#39;</span>
+                                  <span class="sa">f</span><span class="s1">&#39;Offset=</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">offset</span><span class="si">}</span><span class="s1">, Key=</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s1">, &#39;</span>
+                                  <span class="sa">f</span><span class="s1">&#39;Value=</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+                            <span class="k">return</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+                <span class="k">return</span>
+        <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during Kafka consumption: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="KafkaConsumerClient.stop">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_consumer_client.KafkaConsumerClient.stop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method gracefully stops the Kafka consumer, unsubscribes from the topic(s),</span>
+<span class="sd">        and closes the connection. It&#39;s essential to call this method once the consumer completes</span>
+<span class="sd">        message consumption to release resources. The following method will also be triggered</span>
+<span class="sd">        when the consumer unsubscribes from the topic(s).</span>
+
+<span class="sd">        :return: It returns True if the consumer has stopped successfully or if it was already</span>
+<span class="sd">                stopped; otherwise, it returns False if an error occurred during the consumer</span>
+<span class="sd">                unsubscription.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka consumer is stopped and connection closed!&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="n">KafkaError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error stopping Kafka consumer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kafka consumer is already stopped!&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="KafkaConsumerClient.is_running">
+<a class="viewcode-back" href="../../kafka_manager.html#kafka_manager.kafka_consumer_client.KafkaConsumerClient.is_running">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method checks whether the Kafka consumer is currently running.</span>
+
+<span class="sd">        :return: It returns True if the consumer has been started and is currently running else,</span>
+<span class="sd">                it returns False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Anshuman Pattnaik.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

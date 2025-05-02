@@ -1,0 +1,582 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KafkaManager &mdash; Kafka Manager 0.0.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=47de8214"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="kafka-manager API" href="api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Kafka Manager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">kafka-manager API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">KafkaManager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager"><code class="docutils literal notranslate"><span class="pre">KafkaManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.admin_client"><code class="docutils literal notranslate"><span class="pre">KafkaManager.admin_client</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.close"><code class="docutils literal notranslate"><span class="pre">KafkaManager.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.close_admin_client"><code class="docutils literal notranslate"><span class="pre">KafkaManager.close_admin_client()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.connect_admin_client"><code class="docutils literal notranslate"><span class="pre">KafkaManager.connect_admin_client()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.consume_messages"><code class="docutils literal notranslate"><span class="pre">KafkaManager.consume_messages()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.consumers"><code class="docutils literal notranslate"><span class="pre">KafkaManager.consumers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.create_consumer"><code class="docutils literal notranslate"><span class="pre">KafkaManager.create_consumer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.create_topic"><code class="docutils literal notranslate"><span class="pre">KafkaManager.create_topic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.delete_topic"><code class="docutils literal notranslate"><span class="pre">KafkaManager.delete_topic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.is_producer_running"><code class="docutils literal notranslate"><span class="pre">KafkaManager.is_producer_running()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.producer_client"><code class="docutils literal notranslate"><span class="pre">KafkaManager.producer_client</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.send_message"><code class="docutils literal notranslate"><span class="pre">KafkaManager.send_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.start_consumer"><code class="docutils literal notranslate"><span class="pre">KafkaManager.start_consumer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.start_producer"><code class="docutils literal notranslate"><span class="pre">KafkaManager.start_producer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.stop_all_consumers"><code class="docutils literal notranslate"><span class="pre">KafkaManager.stop_all_consumers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.stop_consumer"><code class="docutils literal notranslate"><span class="pre">KafkaManager.stop_consumer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_manager.KafkaManager.stop_producer"><code class="docutils literal notranslate"><span class="pre">KafkaManager.stop_producer()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kafka_manager.kafka_producer_client">KafkaProducerClient</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kafka_manager.kafka_producer_client.KafkaProducerClient"><code class="docutils literal notranslate"><span class="pre">KafkaProducerClient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.flush"><code class="docutils literal notranslate"><span class="pre">KafkaProducerClient.flush()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.is_producer_running"><code class="docutils literal notranslate"><span class="pre">KafkaProducerClient.is_producer_running()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.send_message"><code class="docutils literal notranslate"><span class="pre">KafkaProducerClient.send_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.start"><code class="docutils literal notranslate"><span class="pre">KafkaProducerClient.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.stop"><code class="docutils literal notranslate"><span class="pre">KafkaProducerClient.stop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kafka_manager.kafka_consumer_client">KafkaConsumerClient</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient"><code class="docutils literal notranslate"><span class="pre">KafkaConsumerClient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.consume"><code class="docutils literal notranslate"><span class="pre">KafkaConsumerClient.consume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.consumer"><code class="docutils literal notranslate"><span class="pre">KafkaConsumerClient.consumer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.is_running"><code class="docutils literal notranslate"><span class="pre">KafkaConsumerClient.is_running()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.start"><code class="docutils literal notranslate"><span class="pre">KafkaConsumerClient.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.stop"><code class="docutils literal notranslate"><span class="pre">KafkaConsumerClient.stop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Kafka Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">kafka-manager API</a></li>
+      <li class="breadcrumb-item active">KafkaManager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/kafka_manager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-kafka_manager.kafka_manager">
+<span id="kafkamanager"></span><h1>KafkaManager<a class="headerlink" href="#module-kafka_manager.kafka_manager" title="Link to this heading"></a></h1>
+<p>Kafka Manager Module</p>
+<p>The Kafka Manager module provides a high-level abstraction over the <cite>kafka-python</cite> library to
+simplify interaction with Apache Kafka. It offers many functionalities to manage Kafka Producers,
+Consumers, Topics, and Admin Client operations, encapsulating the complexity behind
+<cite>kafka-python</cite> usage.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kafka_manager.kafka_manager.</span></span><span class="sig-name descname"><span class="pre">KafkaManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bootstrap_servers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A utility class to manage Kafka producers, consumers, and topics. It provides a higher level of
+abstraction for interacting with Kafka, encapsulating and defining methods to manage producers
+and consumers, and allowing administrative operations like topic creation, deletion, etc. It
+leverages the <cite>KafkaProducerClient</cite> and <cite>KafkaConsumerClient</cite> classes for lifecycle management
+to access and invoke the methods of producers and consumers.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.admin_client">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">admin_client</span></span><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.admin_client" title="Link to this definition"></a></dt>
+<dd><p>Returns the Kafka admin client.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.close" title="Link to this definition"></a></dt>
+<dd><p>This method closes all the Kafka connections (producers, consumers, and admin clients).
+It’s essential to call this method to ensure that all producers, consumers, and admin
+clients are stopped properly and resources are released.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.close_admin_client">
+<span class="sig-name descname"><span class="pre">close_admin_client</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.close_admin_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.close_admin_client" title="Link to this definition"></a></dt>
+<dd><p>This method closes the Kafka admin client connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>It returns True if the Kafka admin client was closed successfully; else it returns
+False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.connect_admin_client">
+<span class="sig-name descname"><span class="pre">connect_admin_client</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.connect_admin_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.connect_admin_client" title="Link to this definition"></a></dt>
+<dd><p>This method connects to the Kafka admin client, establishes a connection to the
+Kafka broker(s), and performs administrative operations on the Kafka cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>It returns True if the connection to the Kafka admin client was successful; else,
+it returns False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.consume_messages">
+<span class="sig-name descname"><span class="pre">consume_messages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">consumer_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_handler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.consume_messages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.consume_messages" title="Link to this definition"></a></dt>
+<dd><p>This method consumes messages from the given <cite>consumer_id</cite> of a specific consumer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>consumer_id</strong> – An ID of the consumer client to start consuming messages from.</p></li>
+<li><p><strong>message_handler</strong> – A function to call when a message is received.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.consumers">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">consumers</span></span><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.consumers" title="Link to this definition"></a></dt>
+<dd><p>Returns the Kafka consumer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.create_consumer">
+<span class="sig-name descname"><span class="pre">create_consumer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.create_consumer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.create_consumer" title="Link to this definition"></a></dt>
+<dd><p>This method creates a new <cite>KafkaConsumerClient</cite> instance with the given configuration,
+establishes the connection to the Kafka broker(s), and stores the specific consumer’s
+configuration in the <cite>consumers</cite> dictionary with the group_id key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topics</strong> – A list of Kafka topics to subscribe to.</p></li>
+<li><p><strong>group_id</strong> – A consumer group_id and defaults to None.</p></li>
+<li><p><strong>auto_offset_reset</strong> – <p>An optional parameter to sort the message ordering, which is set by default to
+‘latest’ when the initial offset in Kafka does not exist.</p>
+<blockquote>
+<div><ul>
+<li><p>’earliest’: Automatically sorts messages earlier than the initial offset.</p></li>
+<li><p>’latest’: Automatically sorts messages later than the initial offset.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>kwargs</strong> – Additional arguments are passed directly to the Kafka Consumer constructor,
+which allows further customization of the consumer (e.g., Security Settings, etc.).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>It returns the new <cite>KafkaConsumerClient</cite> instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.create_topic">
+<span class="sig-name descname"><span class="pre">create_topic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_partitions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replication_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.create_topic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.create_topic" title="Link to this definition"></a></dt>
+<dd><p>This method creates a new topic with the given <cite>topic_name</cite> and it’s an administrative
+operation, it can only be created by the admin client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_name</strong> – Name of the new topic.</p></li>
+<li><p><strong>num_partitions</strong> – Number of partitions of the new topic. Defaults to 1.</p></li>
+<li><p><strong>replication_factor</strong> – Replication factor of the new topic. Defaults to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>It returns True if the topic was created successfully; else it returns False
+otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.delete_topic">
+<span class="sig-name descname"><span class="pre">delete_topic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.delete_topic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.delete_topic" title="Link to this definition"></a></dt>
+<dd><p>This method deletes a topic with the given <cite>topic_name</cite> and it’s an administrative
+operation, it can only be deleted by the admin client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>topic_name</strong> – Name of the new topic.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>It returns True if the topic was deleted successfully; else it returns False
+otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.is_producer_running">
+<span class="sig-name descname"><span class="pre">is_producer_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.is_producer_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.is_producer_running" title="Link to this definition"></a></dt>
+<dd><p>This method checks if the managed Kafka producer client is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>It returns True if the managed Kafka producer client is running and False
+otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.producer_client">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">producer_client</span></span><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.producer_client" title="Link to this definition"></a></dt>
+<dd><p>Returns the Kafka producer client.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.send_message">
+<span class="sig-name descname"><span class="pre">send_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.send_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.send_message" title="Link to this definition"></a></dt>
+<dd><p>This method sends message to the specified Kafka topic by using the managed
+Kafka producer client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic</strong> – The name of the Kafka topic send the message to.</p></li>
+<li><p><strong>value</strong> – The serialized message JSON payload.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the sent message was successful, it returns Metadata; otherwise, it returns
+None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.start_consumer">
+<span class="sig-name descname"><span class="pre">start_consumer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">consumer_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.start_consumer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.start_consumer" title="Link to this definition"></a></dt>
+<dd><p>This method starts a specific <cite>KafkaConsumerClient</cite> instance of the given <cite>consumer_id</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>consumer_id</strong> – An ID of the consumer client to start.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>It returns True if the consumer started successfully else, it returns False if the
+consumer ID is not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.start_producer">
+<span class="sig-name descname"><span class="pre">start_producer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.start_producer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.start_producer" title="Link to this definition"></a></dt>
+<dd><p>This method starts the Kafka producer client and establishes the connection to the
+Kafka broker(s), which this instance manages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>It returns True if the Kafka producer started successfully else it returns False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.stop_all_consumers">
+<span class="sig-name descname"><span class="pre">stop_all_consumers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.stop_all_consumers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.stop_all_consumers" title="Link to this definition"></a></dt>
+<dd><p>This method stops all <cite>KafkaConsumerClient</cite> instances.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.stop_consumer">
+<span class="sig-name descname"><span class="pre">stop_consumer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">consumer_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.stop_consumer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.stop_consumer" title="Link to this definition"></a></dt>
+<dd><p>This method stops a specific <cite>KafkaConsumerClient</cite> instance of the given <cite>consumer_id</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>consumer_id</strong> – An ID of the consumer client to stop consuming messages from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>It returns True if the consumer stopped successfully else, it returns False if the
+consumer ID is not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_manager.KafkaManager.stop_producer">
+<span class="sig-name descname"><span class="pre">stop_producer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_manager.html#KafkaManager.stop_producer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_manager.KafkaManager.stop_producer" title="Link to this definition"></a></dt>
+<dd><p>This method will stop the managed Kafka producer client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>It returns True if the Kafka producer stopped successfully else it returns False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-kafka_manager.kafka_producer_client">
+<span id="kafkaproducerclient"></span><h1>KafkaProducerClient<a class="headerlink" href="#module-kafka_manager.kafka_producer_client" title="Link to this heading"></a></h1>
+<p>KafkaProducerClient Module</p>
+<p>The Kafka Producer Client module encapsulates Kafka Producer API from the <cite>kafka-python</cite> library.
+It provides many functionalities for start, stop, flush, and send messages to Kafka topics.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kafka_manager.kafka_producer_client.KafkaProducerClient">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kafka_manager.kafka_producer_client.</span></span><span class="sig-name descname"><span class="pre">KafkaProducerClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bootstrap_servers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_producer_client.html#KafkaProducerClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_producer_client.KafkaProducerClient" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A class for managing the lifecycle of a Kafka producer, which encapsulates the connection
+and disconnection logic, allows managing and reusing the producer within an application.
+To send messages, it serializes the message value to JSON format, which gives an advantage
+to read once deserialized.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_producer_client.KafkaProducerClient.flush">
+<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_producer_client.html#KafkaProducerClient.flush"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.flush" title="Link to this definition"></a></dt>
+<dd><p>This method flushes the producer and ensures all buffered messages are sent successfully.
+It forces the producer to send buffered messages that have not yet been transmitted to the
+Kafka brokers and blocks until all outstanding messages have been successfully sent or
+timeout is reached.</p>
+<p>To prevent data loss, calling the flush method is essential before stopping or closing
+the Kafka producer. As per the lifecycle, If the producer is terminated before all
+messages are flushed, there is a higher possibility that some messages may not be
+delivered to Kafka.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This method does not return a value. It only performs an action to flush the produce
+rather than returning a result.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>If an exception occurs during the flushing process due to network issues</strong><strong>, </strong><strong>broker</strong> – </p></li>
+<li><p><strong>unavailability</strong><strong>, or </strong><strong>any other problem preventing the producer from sending messages</strong> – </p></li>
+<li><p><strong>to the brokers</strong><strong>, </strong><strong>an exception is raised to handle this scenario</strong><strong>, </strong><strong>and the caller</strong> – </p></li>
+<li><p><strong>should be prepared to handle this exception on the client side.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_producer_client.KafkaProducerClient.is_producer_running">
+<span class="sig-name descname"><span class="pre">is_producer_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_producer_client.html#KafkaProducerClient.is_producer_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.is_producer_running" title="Link to this definition"></a></dt>
+<dd><p>This method checks if the Kafka producer is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If the Kafka producer has been running and connected, it returns True. Otherwise,
+it returns False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_producer_client.KafkaProducerClient.send_message">
+<span class="sig-name descname"><span class="pre">send_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_producer_client.html#KafkaProducerClient.send_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.send_message" title="Link to this definition"></a></dt>
+<dd><p>This method sends the serialized JSON value to the Kafka topic with the given topic
+name using the configured Kafka producer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic</strong> – The topic name to send the message to.</p></li>
+<li><p><strong>value</strong> – The serialized JSON value to send to the topic.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the sending was successful, it returns metadata about the delivered message.
+Otherwise, it returns None if the producer is not running or an error occurred during
+sending.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_producer_client.KafkaProducerClient.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_producer_client.html#KafkaProducerClient.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.start" title="Link to this definition"></a></dt>
+<dd><p>This method starts the Kafka producer and connects to the Kafka broker(s).
+And configures the <cite>KafkaProducer</cite> instance, which handles the initial connection
+to Kafka broker(s) specified in <cite>bootstrap_servers.</cite></p>
+<p>To serialize the message values to JSON, the producer configured with UTF-8 encoding
+standard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>It returns True if the producer started and connected successfully else
+False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_producer_client.KafkaProducerClient.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_producer_client.html#KafkaProducerClient.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_producer_client.KafkaProducerClient.stop" title="Link to this definition"></a></dt>
+<dd><p>This method gracefully closes the Kafka producer connection. It’s essential to call this
+method once the Kafka producer processes all pending messages and resources are released.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If the Kafka producer was stopped successfully or already stopped, it returns True.
+Otherwise, if an error occurs while stopping the Kafka producer, it returns False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-kafka_manager.kafka_consumer_client">
+<span id="kafkaconsumerclient"></span><h1>KafkaConsumerClient<a class="headerlink" href="#module-kafka_manager.kafka_consumer_client" title="Link to this heading"></a></h1>
+<p>KafkaConsumerClient Module</p>
+<p>The Kafka Consumer Client module encapsulates Kafka Consumer API from the <cite>kafka-python</cite> library.
+It provides many functionalities to create, start, stop, and consume messages from Kafka topics.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kafka_manager.kafka_consumer_client.KafkaConsumerClient">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kafka_manager.kafka_consumer_client.</span></span><span class="sig-name descname"><span class="pre">KafkaConsumerClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bootstrap_servers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'latest'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_consumer_client.html#KafkaConsumerClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A class for managing the lifecycle of a Kafka consumer, which encapsulates the connection
+and disconnection logic, allows managing and consuming messages from a Kafka consumer
+within an application. It implements a deserialization technique to decode the message
+value from JSON to read the content and handles errors in each process.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_consumer_client.KafkaConsumerClient.consume">
+<span class="sig-name descname"><span class="pre">consume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_handler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_consumer_client.html#KafkaConsumerClient.consume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.consume" title="Link to this definition"></a></dt>
+<dd><p>This method continuously enters a loop to poll for new messages from the Kafka topic
+and calls each received message the <cite>message_handler</cite> function, passing the message
+object as an argument. This technique is implemented to process the messages efficiently,
+and it continues to consume messages until the <cite>stop()</cite> method is called, or any
+discrepancy or exception occurs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message_handler</strong> – When each message is received, a method that takes a <cite>KafkaConsumer</cite> message
+object as an argument will be called. The message object contains attributes
+like <cite>topic,</cite> <cite>partition,</cite> <cite>offset,</cite> <cite>key,</cite> and <cite>value.</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kafka_manager.kafka_consumer_client.KafkaConsumerClient.consumer">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">consumer</span></span><a class="headerlink" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.consumer" title="Link to this definition"></a></dt>
+<dd><p>Returns the Kafka Consumer object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_consumer_client.KafkaConsumerClient.is_running">
+<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_consumer_client.html#KafkaConsumerClient.is_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.is_running" title="Link to this definition"></a></dt>
+<dd><p>This method checks whether the Kafka consumer is currently running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>It returns True if the consumer has been started and is currently running else,
+it returns False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_consumer_client.KafkaConsumerClient.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_consumer_client.html#KafkaConsumerClient.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.start" title="Link to this definition"></a></dt>
+<dd><p>This method starts the Kafka consumer and connects to the Kafka broker(s) and
+subscribes to the specified topic(s). And configures the <cite>KafkaConsumer</cite> instance,
+which handles consuming messages from a Kafka topic.</p>
+<p>The consumer is configured to deserialize the message from (UTF-8) encoded JSON.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>It returns True if the consumer starts and connects successfully or returns False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kafka_manager.kafka_consumer_client.KafkaConsumerClient.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kafka_manager/kafka_consumer_client.html#KafkaConsumerClient.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kafka_manager.kafka_consumer_client.KafkaConsumerClient.stop" title="Link to this definition"></a></dt>
+<dd><p>This method gracefully stops the Kafka consumer, unsubscribes from the topic(s),
+and closes the connection. It’s essential to call this method once the consumer completes
+message consumption to release resources. The following method will also be triggered
+when the consumer unsubscribes from the topic(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>It returns True if the consumer has stopped successfully or if it was already
+stopped; otherwise, it returns False if an error occurred during the consumer
+unsubscription.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api.html" class="btn btn-neutral float-left" title="kafka-manager API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Anshuman Pattnaik.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
