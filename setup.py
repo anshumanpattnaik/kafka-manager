@@ -1,6 +1,6 @@
 import os
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8') as file:
     long_description = file.read()
