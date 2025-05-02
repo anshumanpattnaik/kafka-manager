@@ -7,13 +7,17 @@ import sys
 
 sys.path.insert(0, os.path.abspath('..'))
 
+version = {}
+with open(os.path.join(os.path.dirname(__file__), 'kafka_manager', '__version__.py')) as file:
+    exec(file.read(), version)
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Kafka Manager'
 copyright = '2025, Anshuman Pattnaik'
 author = 'Anshuman Pattnaik'
-release = '1.0.0'
+release = version['__version__']
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
