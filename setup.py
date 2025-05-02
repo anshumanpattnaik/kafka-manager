@@ -1,4 +1,5 @@
 import os
+
 from setuptools import setup, find_packages
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8') as file:
@@ -9,15 +10,16 @@ with open(os.path.join(os.path.dirname(__file__), 'kafka_manager', '__version__.
     exec(file.read(), version)
 
 setup(
-    name='kafka_manager',
+    name='kafka-manager',
     version=version['__version__'],
     description='A Python library for managing Kafka Producers, Consumers and Topics',
     long_description=long_description,
-    long_description_content_type='text/markdown',
+    long_description_content_type='text/x-rst',
     author='Anshuman Pattnaik',
     author_email='anshuman@hackbotone.com',
     url='https://github.com/anshumanpattnaik/kafka-manager',
-    packages=find_packages(),
+    packages=['kafka_manager'],
+    package_dir={'kafka_manager': 'kafka_manager'},
     install_requires=[
         'kafka-python',
     ],
